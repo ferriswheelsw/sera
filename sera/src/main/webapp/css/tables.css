@@ -1,8 +1,23 @@
-.bg {
-    background-color: orangered;
+body{
+    margin: 20px;
 }
 
 table, th, td {
     border: 1px solid grey;
     border-collapse: collapse;
+    padding: 10px;
+}
+
+
+.pag{
+    margin-top:20px;
+    border: 20px lavender;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: lavender;
+}
+
+.nav{
+    margin-top:20px;
+    margin-bottom:20px;
 }

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
-<form id="selectMarket" action="portfolio" method="GET">
+<form id="selectMarket" action="portfolio" method="GET" class="nav">
     <select name="selectM" onchange="document.getElementById('selectMarket').submit();">
         <%
             ArrayList<String> markets = ((User)request.getSession().getAttribute("user")).getMarkets();
@@ -45,21 +45,21 @@
 <h3>Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
 
 <table>
-    <%
-        ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");
-        for (Stock s : sL) {
-    %>
+    <%ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");
+    String cur = sL.get(0).getStockCur();%>
     <tr>
         <td>Stock code</td>
-        <td>Current market price / <%=s.getStockCur()%></td>
+        <td>Current market price / <%=cur%></td>
         <td>%1D</td>
-        <td>1D PnL / <%=s.getStockCur()%></td>
+        <td>1D PnL / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%></td>
         <td>%div</td>
         <td>1Y div / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%></td>
         <td>No of ex-div dates per year</td>
         <td>Quantity</td>
     </tr>
-
+    <%
+        for (Stock s : sL) {
+    %>
     <tr>
         <td><%=s.getStockCode()%></td>
         <td><%=s.getMarketPrice()%></td>

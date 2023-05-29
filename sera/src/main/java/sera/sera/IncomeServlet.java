@@ -20,16 +20,19 @@ public class IncomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        request.
         System.out.println("get income");
+
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+
         String market = request.getParameter("selectM");
         if (market == null){
-            market = "NasdaqGS";
+            market = user.getMarkets().get(0);
         }
         System.out.println("market");
         request.setAttribute("currentMarket", market);
 
         // stock code, 12 months
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+
         List<Stock> userstocks =  new ArrayList<>();
         for (int i=0;i<user.getStocks().size();i++){
             System.out.println(market);
@@ -88,21 +91,34 @@ public class IncomeServlet extends HttpServlet {
             Stock s = stocksForPage.get(i);
             for (Dividend d:s.getDividends()){
                 System.out.println("hi");
-                incomeTable[i][d.getMonth()+1] = d.getDivPrice()*s.getHoldings()*(double)session.getAttribute("exRate");
+                System.out.println(d.getMonth());
+                incomeTable[i][d.getMonth()] = d.getDivPrice()*s.getHoldings();
             }
+
+            // if have expected dividend
+            if(s.getPayDiv() != null){
+                System.out.println("ex");
+                System.out.println(s.getPayDiv().getMonth());
+                incomeTable[i][s.getPayDiv().getMonth()] = s.getPayDiv().getDivPrice()*s.getHoldings();
+                s.setLastDiv(s.getPayDiv());
+            }
+
             if (s.getLastDiv() != null) {
                 int upcomingMonth = s.getLastDiv().getMonth() + s.getGap();
                 if(s.getLastDiv().getYear()==Year.now().getValue()){
                     // a month = max 11 min 0
                     while (upcomingMonth<=11){
-                        incomeTable[i][upcomingMonth+1] = s.getLastDiv().getDivPrice()*s.getHoldings()*(double)session.getAttribute("exRate");
+                        incomeTable[i][upcomingMonth] = s.getLastDiv().getDivPrice()*s.getHoldings();
+                        System.out.println("est");
+                        System.out.println(upcomingMonth);
+                        System.out.println(s.getLastDiv().getDivPrice()*s.getHoldings());
                         upcomingMonth += s.getGap();
                     }
                 }else {
                     upcomingMonth -= 12;
                     while (upcomingMonth<=11){
                         if (upcomingMonth >=0){
-                            incomeTable[i][upcomingMonth+1] = s.getLastDiv().getDivPrice()*s.getHoldings()*(double)session.getAttribute("exRate");
+                            incomeTable[i][upcomingMonth+1] = s.getLastDiv().getDivPrice()*s.getHoldings();
                         }
                         upcomingMonth += s.getGap();
                     }

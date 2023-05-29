@@ -149,37 +149,107 @@ public class LoginServlet extends HttpServlet {
                     List<HistoricalDividend> dividendList = stock.getDividendHistory(cal);
                     System.out.println(dividendList.size());
                     s.setDivfreq(dividendList.size());
+
+                    // TESTING
+                    System.out.println(" ");
+                    System.out.println("TESTING - price ver 1" + s.getStockCode());
+                    for (HistoricalDividend d: dividendList){
+                        printCal(d.getDate());
+                        System.out.println(d.getAdjDividend().doubleValue()/er);
+                    }
+                    System.out.println(" ");
+
+
+
+                    int exdivToPay = 0;
+
                     if(dividendList.size()>0){
-                        double divprice = dividendList.get(dividendList.size()-1).getAdjDividend().doubleValue()/er;
-                        Calendar date = dividendList.get(dividendList.size()-1).getDate();
-                        s.setLastDiv(new Dividend(date.get(Calendar.MONTH), date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
+
                         if (dividendList.size()==1){
                             s.setGap(12);
                         }else{
                             Calendar start = dividendList.get(dividendList.size()-2).getDate();
                             Calendar end = dividendList.get(dividendList.size()-1).getDate();
+                            printCal(start);
+                            printCal(end);
                             LocalDate lstart = LocalDateTime.ofInstant(start.toInstant(), ZoneId.systemDefault()).toLocalDate();
                             LocalDate lend = LocalDateTime.ofInstant(end.toInstant(), ZoneId.systemDefault()).toLocalDate();
-                            int sgap = Period.between(lstart,lend).getMonths();
+                            int sgap = (int) Period.between(lstart,lend).toTotalMonths();
+
+                            if (Period.between(lstart,lend).getDays()>=15){
+                                sgap++;
+                            }
+
                             System.out.println("sgap");
                             System.out.println(sgap);
+
                             s.setGap(sgap);
                         }
+                        double divprice = dividendList.get(dividendList.size()-1).getAdjDividend().doubleValue()/er;
+                        System.out.println("price2");
+                        System.out.println(divprice);
+                        Calendar date = dividendList.get(dividendList.size()-1).getDate();
+                        System.out.println(date.get(Calendar.MONTH));
+
+                        if (stock.getDividend().getPayDate()!=null){
+                            System.out.println("printingtesting");
+                            System.out.println(stock.getDividend().getPayDate().get(Calendar.MONTH));
+                            System.out.println(date.get(Calendar.MONTH));
+                            System.out.println(s.getGap());
+                            if (stock.getDividend().getPayDate().get(Calendar.MONTH) - (date.get(Calendar.MONTH)+s.getGap())>0){
+                                exdivToPay = stock.getDividend().getPayDate().get(Calendar.MONTH) - (date.get(Calendar.MONTH)+s.getGap());
+                            }else if (stock.getDividend().getPayDate().get(Calendar.MONTH)-(date.get(Calendar.MONTH))<s.getGap()){
+                                exdivToPay = stock.getDividend().getPayDate().get(Calendar.MONTH)-(date.get(Calendar.MONTH));
+                            }
+                            System.out.println("exdivtopay");
+                            System.out.println(exdivToPay);
+                        }
+
+                        System.out.println("STOCKK" + s.getStockCode());
+                        System.out.println(date.get(Calendar.MONTH));
+//                        date.add(Calendar.MONTH, exdivToPay);
+                        System.out.println(date.get(Calendar.MONTH));
+                        s.setLastDiv(new Dividend(date.get(Calendar.MONTH)+exdivToPay, date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
+
+                        //expected div
+                        Calendar payDate = stock.getDividend().getPayDate();
+                        System.out.println("PAYPAY");
+
+                        if (payDate != null && (Calendar.getInstance().compareTo(payDate)==-1)){
+                            System.out.println("AYY");
+                            printCal(payDate);
+                            s.setPayDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
+                        }else if (payDate!=null){
+                            System.out.println("beep");
+                            printCal(payDate);
+                            s.setLastDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
+                        }
+
                     }
+
+
 
                     ArrayList<Dividend> dividends = new ArrayList<>();
                     for (HistoricalDividend d : dividendList){
+                        System.out.println("hihihsihsd "+s.getStockCode());
+                        printCal(d.getDate());
                         double divprice = d.getAdjDividend().doubleValue()/er;
+                        System.out.println("price ver 3");
+                        System.out.println(divprice);
                         Calendar date = d.getDate();
 
                         //testing
                         System.out.println("dividend");
-                        System.out.println(date.get(Calendar.YEAR)+" "+(date.get(Calendar.MONTH)+1)+" "+date.get(Calendar.DATE));
+                        System.out.println(date.get(Calendar.YEAR)+" "+(date.get(Calendar.MONTH))+" "+date.get(Calendar.DATE));
 
                         // checking if the dividend was after Jan 1st of this year
                         if (date.get(Calendar.YEAR) == (Year.now().getValue())) {
                             System.out.println(date.get(Calendar.YEAR));
                             System.out.println(Year.now().getValue());
+                            printCal(date);
+                            date.add(Calendar.MONTH, exdivToPay);
+                            System.out.println("lcheck");
+                            printCal(date);
                             dividends.add(new Dividend(date.get(Calendar.MONTH), date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
                         }
                     }
@@ -213,70 +283,12 @@ public class LoginServlet extends HttpServlet {
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
-//
-//        try {
 
-//            Class.forName("com.mysql.jdbc.Driver");
-//            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/learndb", "root", "Appletree1!");
-//            Statement stmt = con.createStatement();
-//            //Query to get the number of rows in a table
-//            String query = "select password from learndb.users where id = " + uid;
-//
-//            PrintWriter out = response.getWriter();
-//            out.println("<html><body>");
-//
-//            //Executing the query
-//            ResultSet rs1 = stmt.executeQuery(query);
-//            rs1.next();
-//
-//
-//            String realpw = rs1.getString(1);
-//            out.println("<h1>" + pw + "</h1>");
-//            out.println("<h1>" + realpw + "</h1>");
-//
-//            if (realpw.equals(pw)){
-//                out.println("<h1>" + "success" + "</h1>");
-//            }else{
-//                out.println("<h1>" + "wrong username or password" + "</h1>");
-//            }
-//
-//            out.println("</body></html>");
-//            con.close();
-//
-//
-//        } catch(Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        PrintWriter out = response.getWriter();
-//        out.println("<html><body><b>Successfully Run"
-//                + "</b></body></html>");
-
-
-
-
-//        request.setAttribute("yes", "yayayaya");
-//        request.getRequestDispatcher("editsuccess.jsp").forward(request, response);
 
     }
 
-//    private String message;
-//
-//    public void init() {
-//        message = "Login";
-//    }
-//
-//    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        response.setContentType("text/html");
-//
-//        // Hello
-//        PrintWriter out = response.getWriter();
-//        out.println("<html><body>");
-//        out.println("<h1>" + message + "</h1>");
-//        out.println("</body></html>");
-//    }
-//
-//    public void destroy() {
-//    }
-
+    public static void printCal(Calendar cal) {
+        System.out.println(Integer.toString(cal.get(1)) + " " + Integer.toString(cal.get(2)) + " " + Integer.toString(cal.get(5)));
+    }
 }
+

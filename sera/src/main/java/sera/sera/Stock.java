@@ -24,6 +24,16 @@ public class Stock {
 
     private String stockCur;
 
+    private Dividend payDiv;
+
+    public Dividend getPayDiv() {
+        return payDiv;
+    }
+
+    public void setPayDiv(Dividend payDiv) {
+        this.payDiv = payDiv;
+    }
+
     public String getStockCur() {
         return stockCur;
     }

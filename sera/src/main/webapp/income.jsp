@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
-<form id="selectMarket" action="income" method="GET">
+<form id="selectMarket" action="income" method="GET" margin="20px" class="nav">
     <select name="selectM" onchange="document.getElementById('selectMarket').submit();">
         <%
             ArrayList<String> markets = ((User)request.getSession().getAttribute("user")).getMarkets();
@@ -75,35 +75,26 @@
     %>
 </table>
 
+<table class="pag">
+    <tr>
 <%--For displaying Previous link except for the 1st page --%>
 <%if ((int)request.getAttribute("currentPage")!=1){%>
-    <td><a href="income?page=${currentPage - 1}">Previous</a></td>
-<%}%>
-<%--For displaying Page numbers. The when condition does not display
-            a link for the current page--%>
-
-<table border="1" cellpadding="5" cellspacing="5">
-    <tr>
-        <c:forEach begin="1" end="${noOfPages}" var="i">
-            <c:choose>
-                <c:when test="${currentPage eq i}">
-                    <td>${i}</td>
-                </c:when>
-                <c:otherwise>
-                    <td><a href="income?page=${i}">${i}</a></td>
-                </c:otherwise>
-            </c:choose>
-        </c:forEach>
-    </tr>
-</table>
+    <td class="pag"><a href="income?page=${currentPage - 1}">Previous</a></td>
+<%}
+for(int i=1;i<((int)request.getAttribute("noOfPages")+1);i++){
+    %>
+    <td class="pag"><a href="income?page=<%=i%>"><%=i%></a></td>
+    <%
+}%>
 
 <%--For displaying Next link --%>
 
-
     <%if ((int)request.getAttribute("currentPage")< (int)request.getAttribute("noOfPages")){%>
-    <td><a href="income?page=${currentPage + 1}">Next</a></td>
+    <td class="pag"><a href="income?page=${currentPage + 1}">Next</a></td>
     <%}%>
 
+    </tr>
+</table>
 
 </body>
 </html>
