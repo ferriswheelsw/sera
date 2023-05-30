@@ -23,10 +23,25 @@ public class IncomeServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
+        String m = request.getParameter("m2");
 
         String market = request.getParameter("selectM");
         if (market == null){
             market = user.getMarkets().get(0);
+        }
+        if(m!=null){
+            System.out.println("HELLOOOO");
+            System.out.println(m);
+            if(m == "m1"){
+                System.out.println("UM");
+                market = user.getMarkets().get(0);
+            }else if(m=="m2"){
+                System.out.println("UM2");
+                market = user.getMarkets().get(1);
+            }else if (m=="m3"){
+                System.out.println("UM3");
+                market = user.getMarkets().get(2);
+            }
         }
         System.out.println("market");
         request.setAttribute("currentMarket", market);

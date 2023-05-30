@@ -15,8 +15,48 @@
     <a href="portfolio">PORTFOLIO</a>
     <a href="income">INCOME</a>
     <link rel="stylesheet" href="css/tables.css">
+<%--    <style>--%>
+<%--        /* Style the tab */--%>
+<%--        .tabb {--%>
+<%--            overflow: hidden;--%>
+<%--            border: 1px solid #ccc;--%>
+<%--            background-color: #f1f1f1;--%>
+<%--            max-width:300px;--%>
+<%--        }--%>
+
+<%--        /* Style the buttons inside the tab */--%>
+<%--        .tabb button {--%>
+<%--            background-color: inherit;--%>
+<%--            float: left;--%>
+<%--            border: none;--%>
+<%--            outline: none;--%>
+<%--            cursor: pointer;--%>
+<%--            padding: 14px 16px;--%>
+<%--            transition: 0.3s;--%>
+<%--            font-size: 17px;--%>
+<%--        }--%>
+
+<%--        /* Change background color of buttons on hover */--%>
+<%--        .tabb button:hover {--%>
+<%--            background-color: #ddd;--%>
+<%--        }--%>
+
+<%--        /* Create an active/current tablink class */--%>
+<%--        .tabb button.active {--%>
+<%--            background-color: #ccc;--%>
+<%--        }--%>
+
+<%--    </style>--%>
 </head>
 <body>
+<div class="tabb">
+    <button id="m1" onclick="document.getElementById('selectMarket').submit();" value = "m1" >plus
+    </button>
+    <button id="m2" onclick="document.getElementById('selectMarket').submit();" value = "m2">minus
+    </button>
+    <button id="m3" onclick="document.getElementById('selectMarket').submit();" value = "m3">star
+    </button>
+</div>
 <form id="selectMarket" action="income" method="GET" margin="20px" class="nav">
     <select name="selectM" onchange="document.getElementById('selectMarket').submit();">
         <%
