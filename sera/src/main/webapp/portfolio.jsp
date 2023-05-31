@@ -14,32 +14,34 @@
 <html>
 <head>
     <title>portfolio</title>
-    <a href="home">HOME</a>
-    <a href="portfolio">PORTFOLIO</a>
-    <a href="income">INCOME</a>
+    <div class="navoverall">
+        <h2 class="sera">SERA</h2>
+        <div class = "nav">
+            <a href="home">Home</a>
+            <a href="portfolio" class="bold">Portfolio</a>
+            <a href="income">Income</a>
+        </div>
+        <a href="login.jsp" class="logout">LOGOUT</a>
+    </div>
+
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
-<form id="selectMarket" action="portfolio" method="GET" class="nav">
-    <select name="selectM" onchange="document.getElementById('selectMarket').submit();">
-        <%
-            ArrayList<String> markets = ((User)request.getSession().getAttribute("user")).getMarkets();
-            for (String market : markets) {
-                if (request.getAttribute("currentMarket").equals(market)){
-
-
-        %>
-        <option value="<%=market%>"  id ='mN' selected><%= market %></option>
-        <%
+<br>
+<form action="portfolio" method="Get" class="tabb" style="margin: 0px">
+    <%
+        ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();
+        for (String market : markets1) {
+            if(market.equals(request.getAttribute("currentMarket"))){
+    %>
+    <input class="selected" type="submit" name="action" value=<%=market%>>
+    <%
+    } else{
+    %><input class="normal" type="submit" name="action" value=<%=market%>>
+    <%
             }
-                else{
-        %>
-        <option value="<%=market%>" id='mN'><%= market %></option>
-        <%
-                }
-            }
-        %>
-    </select>
+        }
+    %>
 </form>
 
 <h3>Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
@@ -62,11 +64,11 @@
     %>
     <tr>
         <td><%=s.getStockCode()%></td>
-        <td><%=s.getMarketPrice()%></td>
-        <td><%=s.getPriceChange()%></td>
-        <td><%=s.getPnl()%></td>
-        <td><%=s.getPercentdiv()%></td>
-        <td><%=s.getTotaldiv()%></td>
+        <td><%=String.format("%.2f", s.getMarketPrice())%></td>
+        <td><%=String.format("%.2f", s.getPriceChange())%></td>
+        <td><%=String.format("%.2f", s.getPnl())%></td>
+        <td><%=String.format("%.2f", s.getPercentdiv())%></td>
+        <td><%=String.format("%.2f", s.getTotaldiv())%></td>
         <td><%=s.getDivfreq()%></td>
         <td><%=s.getHoldings()%></td>
     </tr>

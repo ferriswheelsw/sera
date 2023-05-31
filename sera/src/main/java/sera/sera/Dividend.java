@@ -7,6 +7,27 @@ public class Dividend {
     private String stockID;
     private double divPrice;
 
+    // NEW ATTRIBUTE
+
+    private String divType;
+
+    public String getDivType() {
+        return divType;
+    }
+
+    public void setDivType(String divType) {
+        this.divType = divType;
+    }
+    public Dividend(Dividend d){
+        this.month = d.getMonth();
+        this.year = d.getYear();
+        this.day = d.getDay();
+        this.stockID = d.getStockID();
+        this.divPrice = d.getDivPrice();
+        if (d.getDivType()!=null){
+            this.divType = d.getDivType();
+        }
+    }
     public Dividend(int month, int year, int day, String stockID, double divPrice) {
         this.month = month;
         this.year = year;

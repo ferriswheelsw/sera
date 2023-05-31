@@ -1,3 +1,51 @@
+
+/* Style the tab */
+.tabb {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    /*width: -moz-min-content;*/
+    /*width: -webkit-min-content;*/
+    /*width: min-content;*/
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+/* Style the buttons inside the tab */
+.normal {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 12px 14px;
+    transition: 0.3s;
+    font-size: 15px;
+}
+
+.selected{
+    background-color: lavender;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 12px 14px;
+    transition: 0.3s;
+    font-size: 15px;
+
+}
+
+/* Change background color of buttons on hover */
+.tabb input[type="submit"]:hover {
+    background-color: lightskyblue;
+}
+
+/* Create an active/current tablink class */
+.tabb input[type="submit"].active {
+    background-color: lavenderblush;
+}
+
 body{
     margin: 20px;
 }
@@ -18,37 +66,56 @@ table, th, td {
 }
 
 .nav{
-    margin-top:20px;
-    margin-bottom:20px;
+    overflow:hidden;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
-
-/* Style the tab */
-.tabb {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-    max-width:300px;
+.nav a{
+    display: inline-block;
+    text-align: center;
+    padding: 5px 14px;
+    text-decoration: none;
+    font-size: 16px;
 }
 
-/* Style the buttons inside the tab */
-.tabb button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
+.bold{
+    font-weight: bold;
 }
 
-/* Change background color of buttons on hover */
-.tabb button:hover {
-    background-color: #ddd;
+.navoverall{
+    display: flex;
+    justify-content: space-between;
 }
 
-/* Create an active/current tablink class */
-.tabb button.active {
-    background-color: #ccc;
+.logout{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding:5px 15px;
+    text-align: right;
+    margin:0;
+}
+
+.sera{
+    text-align:left;
+    padding:0;
+    margin:0;
+    font-weight: bold;
+}
+
+.sera:hover{
+    background-color: lavender;
+}
+
+.past{
+    background-color: lightgreen;
+}
+
+.upcoming{
+    background-color: lightyellow;
+}
+
+.estimated{
+    background-color: lightsalmon;
 }

@@ -271,6 +271,7 @@ public class LoginServlet extends HttpServlet {
             }
             else{
                 System.out.println("fail");
+                response.sendRedirect("login.jsp");
             }
 
 

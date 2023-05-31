@@ -1,6 +1,7 @@
 <%@ page import="sera.sera.User" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="sera.sera.Stock" %><%--
+<%@ page import="sera.sera.Stock" %>
+<%@ page import="sera.sera.Dividend" %><%--
   Created by IntelliJ IDEA.
   User: sonja
   Date: 23/5/2023
@@ -11,74 +12,75 @@
 <html>
 <head>
     <title>Income</title>
-    <a href="home">HOME</a>
-    <a href="portfolio">PORTFOLIO</a>
-    <a href="income">INCOME</a>
+    <div class="navoverall">
+        <h2 class="sera">SERA</h2>
+        <div class = "nav">
+            <a href="home">Home</a>
+            <a href="portfolio">Portfolio</a>
+            <a href="income" class="bold">Income</a>
+        </div>
+        <a href="login.jsp" class="logout">LOGOUT</a>
+    </div>
+
+
     <link rel="stylesheet" href="css/tables.css">
-<%--    <style>--%>
-<%--        /* Style the tab */--%>
-<%--        .tabb {--%>
-<%--            overflow: hidden;--%>
-<%--            border: 1px solid #ccc;--%>
-<%--            background-color: #f1f1f1;--%>
-<%--            max-width:300px;--%>
-<%--        }--%>
-
-<%--        /* Style the buttons inside the tab */--%>
-<%--        .tabb button {--%>
-<%--            background-color: inherit;--%>
-<%--            float: left;--%>
-<%--            border: none;--%>
-<%--            outline: none;--%>
-<%--            cursor: pointer;--%>
-<%--            padding: 14px 16px;--%>
-<%--            transition: 0.3s;--%>
-<%--            font-size: 17px;--%>
-<%--        }--%>
-
-<%--        /* Change background color of buttons on hover */--%>
-<%--        .tabb button:hover {--%>
-<%--            background-color: #ddd;--%>
-<%--        }--%>
-
-<%--        /* Create an active/current tablink class */--%>
-<%--        .tabb button.active {--%>
-<%--            background-color: #ccc;--%>
-<%--        }--%>
-
-<%--    </style>--%>
 </head>
 <body>
-<div class="tabb">
-    <button id="m1" onclick="document.getElementById('selectMarket').submit();" value = "m1" >plus
-    </button>
-    <button id="m2" onclick="document.getElementById('selectMarket').submit();" value = "m2">minus
-    </button>
-    <button id="m3" onclick="document.getElementById('selectMarket').submit();" value = "m3">star
-    </button>
-</div>
-<form id="selectMarket" action="income" method="GET" margin="20px" class="nav">
-    <select name="selectM" onchange="document.getElementById('selectMarket').submit();">
-        <%
-            ArrayList<String> markets = ((User)request.getSession().getAttribute("user")).getMarkets();
-            for (String market : markets) {
-                if (request.getAttribute("currentMarket").equals(market)){
-
-
-        %>
-        <option value="<%=market%>"  id ='mN' selected><%= market %></option>
-        <%
-        }
-        else{
-        %>
-        <option value="<%=market%>" id='mN'><%= market %></option>
-        <%
-                }
+<br>
+<form action="income" method="Get" class="tabb">
+    <%
+        ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();
+        for (String market : markets1) {
+            if(market.equals(request.getAttribute("currentMarket"))){
+    %>
+    <input class="selected" type="submit" name="action" value=<%=market%>>
+    <%
+            } else{
+    %><input class="normal" type="submit" name="action" value=<%=market%>>
+    <%
             }
-        %>
-    </select>
+    }
+    %>
 </form>
 
+
+<%--<table>--%>
+<%--    <tr>--%>
+<%--        <td>Stock code</td>--%>
+<%--        <td>Jan</td>--%>
+<%--        <td>Feb</td>--%>
+<%--        <td>Mar</td>--%>
+<%--        <td>Apr</td>--%>
+<%--        <td>May</td>--%>
+<%--        <td>Jun</td>--%>
+<%--        <td>Jul</td>--%>
+<%--        <td>Aug</td>--%>
+<%--        <td>Sep</td>--%>
+<%--        <td>Oct</td>--%>
+<%--        <td>Nov</td>--%>
+<%--        <td>Dec</td>--%>
+<%--    </tr>--%>
+<%--    <%--%>
+<%--        double[][] iT = (double[][])request.getAttribute("incomeTable");--%>
+<%--        ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");--%>
+<%--        for (int i=0;i<sL.size();i++) {--%>
+<%--            double[] row = iT[i];--%>
+<%--    %>--%>
+<%--    <tr>--%>
+<%--        <td><%=sL.get(i).getStockCode()%></td>--%>
+<%--        <%--%>
+<%--            for(int j=0;j<12;j++){--%>
+<%--                %>  <td><%=row[j]%></td>--%>
+<%--        <%--%>
+<%--            }--%>
+<%--            %>--%>
+<%--    </tr>--%>
+<%--    <%--%>
+<%--        }--%>
+<%--    %>--%>
+<%--</table>--%>
+
+<%-- new new--%>
 <table>
     <tr>
         <td>Stock code</td>
@@ -96,19 +98,24 @@
         <td>Dec</td>
     </tr>
     <%
-        double[][] iT = (double[][])request.getAttribute("incomeTable");
-        ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");
-        for (int i=0;i<sL.size();i++) {
-            double[] row = iT[i];
+        Dividend[][] divT = (Dividend[][])request.getAttribute("divTable");
+        ArrayList<Stock> stockL = (ArrayList<Stock>)request.getAttribute("stockList");
+        for (int i=0;i<stockL.size();i++) {
+            Dividend[] row = divT[i];
     %>
     <tr>
-        <td><%=sL.get(i).getStockCode()%></td>
+        <td><%=stockL.get(i).getStockCode()%></td>
         <%
             for(int j=0;j<12;j++){
-                %>  <td><%=row[j]%></td>
+                if (row[j] == null){
+        %> <td>0.00</td>
+        <%
+                }else{
+        %>  <td class = "<%=row[j].getDivType()%>"><%=String.format("%.2f", row[j].getDivPrice()*(stockL.get(i).getHoldings()))%></td>
         <%
             }
-            %>
+            }
+        %>
     </tr>
     <%
         }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.List;
 
 @WebServlet("/income")
@@ -23,25 +24,19 @@ public class IncomeServlet extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
-        String m = request.getParameter("m2");
-
-        String market = request.getParameter("selectM");
-        if (market == null){
-            market = user.getMarkets().get(0);
-        }
-        if(m!=null){
-            System.out.println("HELLOOOO");
-            System.out.println(m);
-            if(m == "m1"){
-                System.out.println("UM");
-                market = user.getMarkets().get(0);
-            }else if(m=="m2"){
-                System.out.println("UM2");
-                market = user.getMarkets().get(1);
-            }else if (m=="m3"){
-                System.out.println("UM3");
-                market = user.getMarkets().get(2);
+        System.out.println("HELP");
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            String[] paramValues = request.getParameterValues(paramName);
+            for (int i = 0; i < paramValues.length; i++) {
+                String paramValue = paramValues[i];
+                System.out.println(paramName + " = " + paramValue);
             }
+        }
+        String market = request.getParameter("action");
+        if(market==null&&(user.getMarkets().get(0)!=null)){
+            market = user.getMarkets().get(0);
         }
         System.out.println("market");
         request.setAttribute("currentMarket", market);
@@ -83,9 +78,6 @@ public class IncomeServlet extends HttpServlet {
         }
 
 
-//        List<Stock> list = Stock.viewAllEmployees(
-//                (page - 1) * recordsPerPage,
-//                recordsPerPage);
         int noOfRecords = userstocks.size();
         int noOfPages = (int)Math.ceil(noOfRecords * 1.0
                 / recordsPerPage);
@@ -100,22 +92,21 @@ public class IncomeServlet extends HttpServlet {
 
         // 12 months
 
-        double[][] incomeTable = new double[stocksForPage.size()][13];
-        ArrayList<String> dividends = new ArrayList<>();
+        Dividend[][] divTable = new Dividend[stocksForPage.size()][13];
+        ArrayList<String> dividendList = new ArrayList<>();
         for (int i=0; i< stocksForPage.size();i++){
             Stock s = stocksForPage.get(i);
             for (Dividend d:s.getDividends()){
-                System.out.println("hi");
-                System.out.println(d.getMonth());
-                incomeTable[i][d.getMonth()] = d.getDivPrice()*s.getHoldings();
+                d.setDivType("past");
+                divTable[i][d.getMonth()] = d;
+                // d.getDivPrice()*s.getHoldings();
             }
 
             // if have expected dividend
             if(s.getPayDiv() != null){
-                System.out.println("ex");
-                System.out.println(s.getPayDiv().getMonth());
-                incomeTable[i][s.getPayDiv().getMonth()] = s.getPayDiv().getDivPrice()*s.getHoldings();
-                s.setLastDiv(s.getPayDiv());
+                s.getPayDiv().setDivType("upcoming");
+                divTable[i][s.getPayDiv().getMonth()] = s.getPayDiv();
+                s.setLastDiv(new Dividend(s.getPayDiv()));
             }
 
             if (s.getLastDiv() != null) {
@@ -123,17 +114,16 @@ public class IncomeServlet extends HttpServlet {
                 if(s.getLastDiv().getYear()==Year.now().getValue()){
                     // a month = max 11 min 0
                     while (upcomingMonth<=11){
-                        incomeTable[i][upcomingMonth] = s.getLastDiv().getDivPrice()*s.getHoldings();
-                        System.out.println("est");
-                        System.out.println(upcomingMonth);
-                        System.out.println(s.getLastDiv().getDivPrice()*s.getHoldings());
+                        s.getLastDiv().setDivType("estimated");
+                        divTable[i][upcomingMonth] = s.getLastDiv();
                         upcomingMonth += s.getGap();
                     }
                 }else {
                     upcomingMonth -= 12;
                     while (upcomingMonth<=11){
                         if (upcomingMonth >=0){
-                            incomeTable[i][upcomingMonth+1] = s.getLastDiv().getDivPrice()*s.getHoldings();
+                            s.getLastDiv().setDivType("estimated");
+                            divTable[i][upcomingMonth] = s.getLastDiv();
                         }
                         upcomingMonth += s.getGap();
                     }
@@ -143,22 +133,25 @@ public class IncomeServlet extends HttpServlet {
 
         }
 
-
-        request.setAttribute("incomeTable", incomeTable);
-
+        request.setAttribute("divTable", divTable);
+//        request.setAttribute("incomeTable", incomeTable);
+//
         // TESTING - PRINT TABLE
-        for (double[] x : incomeTable)
+        for (Dividend[] x : divTable)
         {
-            for (double y : x)
+            for (Dividend y : x)
             {
-                System.out.print(y + " ");
+                if(y==null){
+                    System.out.print("- ");
+                }else{
+                    System.out.print(y.getDivPrice() + y.getDivType()+" ");
+                }
             }
             System.out.println();
         }
 
 
 
-        //System.out.println(((ArrayList<Stock>)request.getAttribute("stockList")).get(0).getStockCode());
         request.getRequestDispatcher("/income.jsp").forward(request, response);
     }
 

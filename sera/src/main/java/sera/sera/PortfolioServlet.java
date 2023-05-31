@@ -17,16 +17,20 @@ public class PortfolioServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        request.
         System.out.println("get");
-        String market = request.getParameter("selectM");
-        if (market == null){
-            market = "NasdaqGS";
+
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+
+
+        String market = request.getParameter("action");
+        if(market==null&&(user.getMarkets().get(0)!=null)){
+            market = user.getMarkets().get(0);
         }
         System.out.println("market");
         request.setAttribute("currentMarket", market);
 
         // stock code, current market price, %1D, 1DPnL. %div, 1Ydiv, divfreq, quantitty
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
+
         List<Stock> userstocks =  new ArrayList<>();
         double totalIncome = 0.0;
         for (int i=0;i<user.getStocks().size();i++){
@@ -42,7 +46,7 @@ public class PortfolioServlet extends HttpServlet {
         System.out.println("size");
         System.out.println(userstocks.size());
 
-        request.setAttribute("totalIncome", totalIncome);
+        request.setAttribute("totalIncome", String.format("%.2f", totalIncome));
         request.setAttribute("stockList", userstocks);
 
         System.out.println(((ArrayList<Stock>)request.getAttribute("stockList")).get(0).getStockCode());
