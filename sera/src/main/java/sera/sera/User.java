@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static sera.sera.UserDB.update;
+
 public class User {
     private int UserID;
     private String firstName;
@@ -72,8 +74,9 @@ public class User {
         return defaultCurrency;
     }
 
-    public void setDefaultCurrency(String defaultCurrency) {
+    public void setDefaultCurrency(String defaultCurrency) throws SQLException, ClassNotFoundException {
         this.defaultCurrency = defaultCurrency;
+        update(this.UserID, defaultCurrency);
     }
 
     public ArrayList<Stock> getStocks() {

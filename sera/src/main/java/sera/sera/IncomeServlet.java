@@ -90,22 +90,27 @@ public class IncomeServlet extends HttpServlet {
 
         request.setAttribute("stockList", stocksForPage);
 
+        // total
+        double[] total = new double[stocksForPage.size()];
+
+
         // 12 months
 
-        Dividend[][] divTable = new Dividend[stocksForPage.size()][13];
+        Dividend[][] divTable = new Dividend[stocksForPage.size()][12];
         ArrayList<String> dividendList = new ArrayList<>();
         for (int i=0; i< stocksForPage.size();i++){
             Stock s = stocksForPage.get(i);
             for (Dividend d:s.getDividends()){
                 d.setDivType("past");
                 divTable[i][d.getMonth()] = d;
-                // d.getDivPrice()*s.getHoldings();
+                total[i] += d.getDivPrice()*s.getHoldings();
             }
 
             // if have expected dividend
             if(s.getPayDiv() != null){
                 s.getPayDiv().setDivType("upcoming");
                 divTable[i][s.getPayDiv().getMonth()] = s.getPayDiv();
+                total[i] += s.getPayDiv().getDivPrice()*s.getHoldings();
                 s.setLastDiv(new Dividend(s.getPayDiv()));
             }
 
@@ -116,6 +121,7 @@ public class IncomeServlet extends HttpServlet {
                     while (upcomingMonth<=11){
                         s.getLastDiv().setDivType("estimated");
                         divTable[i][upcomingMonth] = s.getLastDiv();
+                        total[i] += s.getLastDiv().getDivPrice()*s.getHoldings();
                         upcomingMonth += s.getGap();
                     }
                 }else {
@@ -124,6 +130,7 @@ public class IncomeServlet extends HttpServlet {
                         if (upcomingMonth >=0){
                             s.getLastDiv().setDivType("estimated");
                             divTable[i][upcomingMonth] = s.getLastDiv();
+                            total[i] += s.getLastDiv().getDivPrice()*s.getHoldings();
                         }
                         upcomingMonth += s.getGap();
                     }
@@ -134,8 +141,9 @@ public class IncomeServlet extends HttpServlet {
         }
 
         request.setAttribute("divTable", divTable);
-//        request.setAttribute("incomeTable", incomeTable);
-//
+        request.setAttribute("total", total);
+
+
         // TESTING - PRINT TABLE
         for (Dividend[] x : divTable)
         {

@@ -16,6 +16,7 @@
             <a href="home" class="bold">Home</a>
             <a href="portfolio">Portfolio</a>
             <a href="income" >Income</a>
+            <a href="profile">Profile</a>
         </div>
         <a href="login.jsp" class="logout">LOGOUT</a>
     </div>

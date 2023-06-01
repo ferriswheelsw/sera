@@ -49,6 +49,24 @@ public class UserDB {
         users.add(new User(id, fN, lN, email, pwblob, cur));
     }
 
+    public static void update(int id, String cur) throws ClassNotFoundException, SQLException {
+        // Establish connection
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/seraschema", "root", "Appletree1!");
+
+        // Update existing user
+        PreparedStatement st = con.prepareStatement("update seraschema.user set default_currency = ? where userid = ?");
+        st.setString(1, cur);
+        st.setInt(2, id);
+
+        st.executeUpdate();
+
+        // Close all the connections
+        st.close();
+        con.close();
+
+    }
+
     // Update an existing user's information
     public static void update(int id, String fN, String lN, String email, String pw, String cur) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         // hash password

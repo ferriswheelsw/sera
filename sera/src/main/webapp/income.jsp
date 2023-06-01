@@ -18,6 +18,7 @@
             <a href="home">Home</a>
             <a href="portfolio">Portfolio</a>
             <a href="income" class="bold">Income</a>
+            <a href="profile">Profile</a>
         </div>
         <a href="login.jsp" class="logout">LOGOUT</a>
     </div>
@@ -44,46 +45,10 @@
 </form>
 
 
-<%--<table>--%>
-<%--    <tr>--%>
-<%--        <td>Stock code</td>--%>
-<%--        <td>Jan</td>--%>
-<%--        <td>Feb</td>--%>
-<%--        <td>Mar</td>--%>
-<%--        <td>Apr</td>--%>
-<%--        <td>May</td>--%>
-<%--        <td>Jun</td>--%>
-<%--        <td>Jul</td>--%>
-<%--        <td>Aug</td>--%>
-<%--        <td>Sep</td>--%>
-<%--        <td>Oct</td>--%>
-<%--        <td>Nov</td>--%>
-<%--        <td>Dec</td>--%>
-<%--    </tr>--%>
-<%--    <%--%>
-<%--        double[][] iT = (double[][])request.getAttribute("incomeTable");--%>
-<%--        ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");--%>
-<%--        for (int i=0;i<sL.size();i++) {--%>
-<%--            double[] row = iT[i];--%>
-<%--    %>--%>
-<%--    <tr>--%>
-<%--        <td><%=sL.get(i).getStockCode()%></td>--%>
-<%--        <%--%>
-<%--            for(int j=0;j<12;j++){--%>
-<%--                %>  <td><%=row[j]%></td>--%>
-<%--        <%--%>
-<%--            }--%>
-<%--            %>--%>
-<%--    </tr>--%>
-<%--    <%--%>
-<%--        }--%>
-<%--    %>--%>
-<%--</table>--%>
-
-<%-- new new--%>
 <table>
     <tr>
         <td>Stock code</td>
+        <td>Total</td>
         <td>Jan</td>
         <td>Feb</td>
         <td>Mar</td>
@@ -100,11 +65,13 @@
     <%
         Dividend[][] divT = (Dividend[][])request.getAttribute("divTable");
         ArrayList<Stock> stockL = (ArrayList<Stock>)request.getAttribute("stockList");
+        double[] total = (double[]) request.getAttribute("total");
         for (int i=0;i<stockL.size();i++) {
             Dividend[] row = divT[i];
     %>
     <tr>
         <td><%=stockL.get(i).getStockCode()%></td>
+        <td><%=String.format("%.2f",total[i])%></td>
         <%
             for(int j=0;j<12;j++){
                 if (row[j] == null){

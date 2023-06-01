@@ -119,3 +119,20 @@ table, th, td {
 .estimated{
     background-color: lightsalmon;
 }
+
+.csvlink{
+    border: 1px solid black;
+    border-radius: 8px;
+    padding:5px 15px;
+    text-align: right;
+    margin:0;
+    background-color: black;
+    color:white;
+}
+
+.profilediv{
+    text-align: center;
+    padding: 20px;
+    display: table;
+    margin: auto;
+}
