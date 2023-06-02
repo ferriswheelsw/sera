@@ -89,6 +89,8 @@
     %>
 </table>
 
+<p>* all values are stated in <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%></p>
+
 <table class="pag">
     <tr>
 <%--For displaying Previous link except for the 1st page --%>

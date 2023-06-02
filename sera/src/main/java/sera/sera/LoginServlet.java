@@ -37,7 +37,7 @@ import java.util.Set;
 
 @WebServlet("/home")
 public class LoginServlet extends HttpServlet {
-    public JsonObject fetchCurrencyAPI(User user, HttpSession session) throws IOException {
+    public static JsonObject fetchCurrencyAPI(User user, HttpSession session) throws IOException {
         // API - currency
 
 
@@ -54,12 +54,6 @@ public class LoginServlet extends HttpServlet {
         JsonObject jsonobj = root.getAsJsonObject();
 
 // Accessing object
-//        String req_result = jsonobj.get("conversion_rates").getAsString();
-//        for (int i = 0; i < req_result.size(); i++) {
-//            JsonElement a = req_result.get(i);
-//            String hi = a.getAsString();
-//            System.out.println(hi);
-//        }
         JsonObject j = (JsonObject) jsonobj.get("conversion_rates");
         Set<String> keyset = j.keySet();
         Iterator<String> keys = keyset.iterator();
@@ -73,7 +67,7 @@ public class LoginServlet extends HttpServlet {
         }
         return j;
     }
-    public void fetchStockAPI(User user, JsonObject j) throws IOException {
+    public static void fetchStockAPI(User user, JsonObject j) throws IOException {
         // API - stock - currently only have symbol market holding for a stock
         // i need market price, dividends, avgdiv, totaldiv, divfreq, price change, pnl
 
@@ -233,17 +227,11 @@ public class LoginServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         User got = (User) session.getAttribute("user");
-        if (request.getAttribute("update")!=null && request.getAttribute("update").equals("currency")){
-            System.out.println("yes");
-            JsonObject j = fetchCurrencyAPI(got, session);
-            fetchStockAPI(got, j);
-            response.sendRedirect(request.getContextPath()+"/profile.jsp");
-        }else{
-            String name = got.getFirstName();
-            request.setAttribute("name", name);
-            request.setAttribute("stockdivfreq", got.getStocks().get(0).getDivfreq());
-            request.getRequestDispatcher("/home.jsp").forward(request, response);
-        }
+        String name = got.getFirstName();
+        request.setAttribute("name", name);
+        request.setAttribute("stockdivfreq", got.getStocks().get(0).getDivfreq());
+        request.getRequestDispatcher("/home.jsp").forward(request, response);
+
     }
 
     @Override

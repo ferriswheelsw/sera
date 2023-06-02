@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static sera.sera.UserDB.insert;
 import static sera.sera.UserDB.update;
 
 public class User {
@@ -242,9 +243,15 @@ public class User {
 
         String insertQuery = "Insert into user_stock (uid, symbol, holding) values (?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(insertQuery);
-
-        for (List<String> i : input){
+        for(int count=4;count<input.size();count++){
+            List<String> i = input.get(count);
+//        }
+//        for (List<String> i : input){
             // i.get(1) = stockCode, i.get(2) = name, i.get(3) = stock market i.get(4) = holding
+            System.out.println("testtt");
+            System.out.println(this.getUserID());
+            System.out.println(i.get(0));
+            System.out.println(i.get(3));
             pstmt.setInt(1,this.getUserID());
             pstmt.setString(2, i.get(0));
             pstmt.setString(3,i.get(3));
@@ -264,6 +271,7 @@ public class User {
             }
 
         }
+        System.out.println(insertQuery);
         pstmt.executeBatch();
         System.out.println("successfully uploaded");
 

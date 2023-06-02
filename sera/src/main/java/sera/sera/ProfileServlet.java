@@ -1,29 +1,35 @@
 package sera.sera;
 
 
+import com.google.gson.JsonObject;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 
+import static sera.sera.LoginServlet.fetchCurrencyAPI;
+import static sera.sera.LoginServlet.fetchStockAPI;
+
 @WebServlet("/profile")
+@MultipartConfig
 public class ProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // for either select currency OR coming here from other pages
         System.out.println("profile");
-        if (request.getParameter("selectCur")==null){
-            System.out.println("null");
-            response.sendRedirect(request.getContextPath()+"/profile.jsp");
-        }else{
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+
+        if (request.getParameter("selectCur") == null) {
+            // coming here from other pages
+            response.sendRedirect(request.getContextPath() + "/profile.jsp");
+        } else {
+            // select currency
             System.out.println(request.getParameter("selectCur"));
-            HttpSession session = request.getSession(false);
-            User user = (User) session.getAttribute("user");
             try {
                 user.setDefaultCurrency(request.getParameter("selectCur"));
             } catch (SQLException e) {
@@ -32,23 +38,56 @@ public class ProfileServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
 
+            try {
+                user.updatestocks();
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            JsonObject j = fetchCurrencyAPI(user, session);
+            fetchStockAPI(user, j);
+            response.sendRedirect(request.getContextPath() + "/profile.jsp");
+            // add some sorta message like change success
 
-            // reset everything api everything again
 
-            RequestDispatcher rd = request.getRequestDispatcher("home");
-            request.setAttribute("update", "currency");
-            rd.forward(request, response);
         }
 
-
-
-
-        // or
-//        request.getRequestDispatcher("/portfolio/.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // doPost only used for update CSV
+        System.out.println("profile!");
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+        if (request.getPart("file") == null) {
+            System.out.println("no file");
 
+        } else {
+            System.out.println("file");
+            Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
+            InputStream fileContent = filePart.getInputStream();
+            try {
+                user.uploadCSV(fileContent);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                user.updatestocks();
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            JsonObject j = fetchCurrencyAPI(user, session);
+            fetchStockAPI(user, j);
+            response.sendRedirect(request.getContextPath() + "/profile.jsp");
+            // add some sorta message like upload success
+
+        }
     }
 }
