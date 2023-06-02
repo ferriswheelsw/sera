@@ -146,4 +146,26 @@ public class Stock {
         this.holdings = holdings;
     }
 
+    public Stock(Stock stock){
+        this.stockCode = stock.getStockCode();
+        this.market = stock.getMarket();
+        this.holdings = stock.getHoldings();
+        this.marketPrice = stock.getMarketPrice();
+        this.dividends = stock.getDividends();
+        this.percentdiv = stock.getPercentdiv();
+        this.totaldiv = stock.getTotaldiv();
+        this.divfreq = stock.getDivfreq();
+        this.priceChange = stock.getPriceChange();
+        this.pnl = stock.getPnl();
+        this.gap = stock.getGap();
+        this.stockCur = stock.getStockCur();
+        if (stock.getLastDiv()!= null){
+            this.lastDiv = stock.getLastDiv();
+        }
+        if(stock.getPayDiv()!=null){
+            this.payDiv = stock.getPayDiv();
+        }
+
+    }
+
 }

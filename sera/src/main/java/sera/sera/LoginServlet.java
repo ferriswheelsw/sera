@@ -221,15 +221,44 @@ public class LoginServlet extends HttpServlet {
         }
 
     }
+
+    public static ArrayList<Stock> topFive(User user){
+        ArrayList<Stock> unsorted = user.getStocks();
+        ArrayList<Stock> sorted = new ArrayList<>();
+        // selectionsort
+        int count = 0;
+        while(sorted.size()<5 && sorted.size()<unsorted.size()){
+            System.out.println(sorted.size());
+            if (sorted.size()>=1){
+                for(Stock s : sorted){
+                    System.out.printf(s.getStockCode() + " ");
+                }
+            }
+            System.out.println("abcde");
+            int maxindex = count;
+            double max = unsorted.get(count).getPriceChange();
+            for (int j=count;j<unsorted.size();j++){
+                if (unsorted.get(j).getPriceChange()>max){
+                    maxindex = j;
+                    max = unsorted.get(j).getPriceChange();
+                }
+            }
+            sorted.add(new Stock(unsorted.get(maxindex)));
+            if (count!=maxindex){
+                Stock temp = new Stock(unsorted.get(maxindex));
+                unsorted.remove(maxindex);
+                unsorted.add(count, temp);
+            }
+            count++;
+        }
+       return sorted;
+
+    }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("hi");
-
         HttpSession session = request.getSession();
         User got = (User) session.getAttribute("user");
-        String name = got.getFirstName();
-        request.setAttribute("name", name);
-        request.setAttribute("stockdivfreq", got.getStocks().get(0).getDivfreq());
+        request.setAttribute("topfive",topFive(got));
         request.getRequestDispatcher("/home.jsp").forward(request, response);
 
     }
@@ -253,11 +282,7 @@ public class LoginServlet extends HttpServlet {
 
                 session.setAttribute("user",user);
                 User got = (User) session.getAttribute("user");
-                String name = got.getFirstName();
-                System.out.println(name);
-                System.out.println(session.getAttribute("exRate"));
-                request.setAttribute("name", name);
-                request.setAttribute("stockdivfreq", got.getStocks().get(0).getDivfreq());
+                request.setAttribute("topfive",topFive(got));
                 request.getRequestDispatcher("/home.jsp").forward(request, response);
 
             }

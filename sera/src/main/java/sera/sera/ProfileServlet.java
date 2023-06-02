@@ -47,8 +47,11 @@ public class ProfileServlet extends HttpServlet {
             }
             JsonObject j = fetchCurrencyAPI(user, session);
             fetchStockAPI(user, j);
-            response.sendRedirect(request.getContextPath() + "/profile.jsp");
-            // add some sorta message like change success
+//            response.sendRedirect(request.getContextPath() + "/profile.jsp");
+            // more on sendirect vs request dispatcher
+            // https://www.geeksforgeeks.org/servlet-collaboration-java-using-requestdispatcher-httpservletresponse/?ref=rp
+            request.setAttribute("message", "Currency change success!");
+            request.getRequestDispatcher("/profile.jsp").forward(request, response);
 
 
         }
@@ -58,6 +61,7 @@ public class ProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // doPost only used for update CSV
+        // https://www.baeldung.com/upload-file-servlet
         System.out.println("profile!");
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
@@ -85,9 +89,8 @@ public class ProfileServlet extends HttpServlet {
             }
             JsonObject j = fetchCurrencyAPI(user, session);
             fetchStockAPI(user, j);
-            response.sendRedirect(request.getContextPath() + "/profile.jsp");
-            // add some sorta message like upload success
-
+            request.setAttribute("message", "Portfolio update success!");
+            request.getRequestDispatcher("/profile.jsp").forward(request, response);
         }
     }
 }

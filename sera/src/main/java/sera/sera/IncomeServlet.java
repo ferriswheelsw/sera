@@ -57,6 +57,9 @@ public class IncomeServlet extends HttpServlet {
         System.out.println(userstocks.size());
 
         // PAGINATION
+        //https://www.javatpoint.com/pagination-in-servlet
+        //https://www.geeksforgeeks.org/servlet-pagination-with-example/
+
 
         int page = 1;
         int recordsPerPage = 5;
