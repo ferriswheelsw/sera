@@ -217,9 +217,7 @@ public class LoginServlet extends HttpServlet {
                 }
             }
             s.setDividends(dividends);
-
         }
-
     }
 
     public static ArrayList<Stock> topFive(User user){
