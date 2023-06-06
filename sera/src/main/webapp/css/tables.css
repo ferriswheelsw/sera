@@ -1,3 +1,7 @@
+@font-face {
+    font-family: 'reg';
+    src: url("fonts/3-Helvetica Now Display/HelveticaNowDisplay-Regular.otf");
+}
 
 /* Style the tab */
 .tabb {
@@ -70,6 +74,7 @@ table, th, td {
     justify-content: center;
     align-items: center;
     text-align: center;
+
 }
 
 .nav a{
@@ -87,6 +92,7 @@ table, th, td {
 .navoverall{
     display: flex;
     justify-content: space-between;
+    font-family: "reg";
 }
 
 .logout{
@@ -121,13 +127,14 @@ table, th, td {
 }
 
 .csvlink{
-    border: 1px solid black;
-    border-radius: 8px;
-    padding:5px 15px;
+    border: 2px solid black;
+    border-radius: 16px;
+    padding:10px 30px;
     text-align: right;
-    margin:0;
     background-color: black;
     color:white;
+    font-size: 20px;
+    margin: 0 0 0 20px;
 }
 
 .profilediv{
@@ -135,6 +142,8 @@ table, th, td {
     padding: 20px;
     display: table;
     margin: auto;
+    font-size:30px;
+    vertical-align: middle;
 }
 
 .alert {

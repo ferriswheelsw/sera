@@ -14,20 +14,19 @@
 <html>
 <head>
     <title>portfolio</title>
-    <div class="navoverall">
-        <h2 class="sera">SERA</h2>
-        <div class = "nav">
-            <a href="home">Home</a>
-            <a href="portfolio" class="bold">Portfolio</a>
-            <a href="income">Income</a>
-            <a href="profile">Profile</a>
-        </div>
-        <a href="login.jsp" class="logout">LOGOUT</a>
-    </div>
-
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
+<div class="navoverall">
+    <h2 class="sera">SERA</h2>
+    <div class = "nav">
+        <a href="home">Home</a>
+        <a href="portfolio" class="bold">Portfolio</a>
+        <a href="income">Income</a>
+        <a href="profile">Profile</a>
+    </div>
+    <a href="login.jsp" class="logout">LOGOUT</a>
+</div>
 <br>
 <form action="portfolio" method="Get" class="tabb" style="margin: 0px">
     <%

@@ -277,6 +277,24 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 JsonObject j = fetchCurrencyAPI(user, session);
                 fetchStockAPI(user, j);
+                // gettotalincome
+                double totalincome = 0;
+                double totalPerMonth = 0;
+                for (Stock s: user.getStocks()){
+                    totalincome += s.getTotaldiv();
+                    if (s.getLastDiv()!=null &&(s.getLastDiv().getMonth()==(Calendar.getInstance().get(Calendar.MONTH)))){
+                        totalPerMonth+=s.getLastDiv().getDivPrice();
+                    }
+                    if (s.getPayDiv()!=null && (s.getPayDiv().getMonth()==(Calendar.getInstance().get(Calendar.MONTH)))){
+                        totalPerMonth+=s.getPayDiv().getDivPrice();
+                    }
+
+                }
+
+                session.setAttribute("totalincome", totalincome);
+                session.setAttribute("totalPerMonth", totalPerMonth);
+
+                
 
                 session.setAttribute("user",user);
                 User got = (User) session.getAttribute("user");

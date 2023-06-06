@@ -12,6 +12,11 @@
 <head>
     <title> Home </title>
     <link rel="stylesheet" href="css/tables.css">
+
+
+</head>
+<body>
+<div>
     <div class="navoverall">
         <h2 class="sera">SERA</h2>
         <div class = "nav">
@@ -21,13 +26,6 @@
             <a href="profile">Profile</a>
         </div>
         <a href="login.jsp" class="logout">LOGOUT</a>
-    </div>
-
-</head>
-<body>
-<div>
-    <div>
-        <img>
     </div>
     <div>
         <h3>welcome, <%=((User)request.getSession().getAttribute("user")).getFirstName()%>.</h3>
@@ -40,9 +38,15 @@
                 <td><%=topFive.get(i).getStockCode()%></td>
                 <td><%=String.format("%.2f", topFive.get(i).getMarketPrice())%></td>
 <%--                calculate absolute price change--%>
-                <td>+<%=String.format("%.2f", topFive.get(i).getPriceChange()*(topFive.get(i).getMarketPrice()-(topFive.get(i).getPnl()/topFive.get(i).getHoldings())))%><%=topFive.get(i).getStockCur()%></td>
+                <td>+<%=String.format("%.2f", topFive.get(i).getPriceChange()/100*(topFive.get(i).getMarketPrice()-(topFive.get(i).getPnl()/topFive.get(i).getHoldings())))%><%=topFive.get(i).getStockCur()%></td>
                 <td><%=String.format("%.2f", topFive.get(i).getPriceChange())%>%</td>
-                <td>img of stock prices going up</td>
+                <%if ( (topFive.get(i).getPriceChange()/100*(topFive.get(i).getMarketPrice()-(topFive.get(i).getPnl()/topFive.get(i).getHoldings()))) > 0){
+                %> <td><img src="img/up.png" width="30"></td>
+                <%
+                    }else{
+                %> <td><img src="img/down.png" width="30"></td>
+                <%
+                    }%>
             </tr>
             <%
                 }
@@ -52,7 +56,8 @@
     </div>
 </div>
 
-<h3> div freq for stock 1: <%=((User)request.getSession().getAttribute("user")).getStocks().get(0).getDivfreq()%></h3>
+<h3>Total estimate income this year / <%=(String)((User) request.getSession().getAttribute("user")).getDefaultCurrency()%>: <%=(double)request.getSession().getAttribute("totalincome")%></h3>
+<h3>Total income this month / <%=(String)((User) request.getSession().getAttribute("user")).getDefaultCurrency()%>: <%=(double)request.getSession().getAttribute("totalPerMonth")%></h3>
 
 </body>
 </html>

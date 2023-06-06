@@ -12,21 +12,22 @@
 <html>
 <head>
     <title>Income</title>
-    <div class="navoverall">
-        <h2 class="sera">SERA</h2>
-        <div class = "nav">
-            <a href="home">Home</a>
-            <a href="portfolio">Portfolio</a>
-            <a href="income" class="bold">Income</a>
-            <a href="profile">Profile</a>
-        </div>
-        <a href="login.jsp" class="logout">LOGOUT</a>
-    </div>
+
 
 
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
+<div class="navoverall">
+    <h2 class="sera">SERA</h2>
+    <div class = "nav">
+        <a href="home">Home</a>
+        <a href="portfolio">Portfolio</a>
+        <a href="income" class="bold">Income</a>
+        <a href="profile">Profile</a>
+    </div>
+    <a href="login.jsp" class="logout">LOGOUT</a>
+</div>
 <br>
 <form action="income" method="Get" class="tabb">
     <%
