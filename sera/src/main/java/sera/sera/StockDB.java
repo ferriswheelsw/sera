@@ -8,16 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class StockDB {
-    public void updateCSV(File csvfile){
-
-    }
-    public double totalPerMarket(String market){
-        return 0.0;
-    }
-    public double totalYear(){
-        return 0.0;
-    }
-
     public static void insertStock(String stockCode, String market, String name) throws ClassNotFoundException, SQLException {
         // Establish connection
         Class.forName("com.mysql.jdbc.Driver");
