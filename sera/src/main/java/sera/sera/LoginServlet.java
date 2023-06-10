@@ -298,10 +298,11 @@ public class LoginServlet extends HttpServlet {
         Properties properties = System.getProperties();
 
         // Setup mail server
+        properties.put("mail.smtp.auth", true);
+        properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", "465");
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.port", 587);
+        properties.put("mail.smtp.ssl.trust", host);
 
         // Get the Session object.// and pass username and password
         Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
@@ -418,12 +419,12 @@ public class LoginServlet extends HttpServlet {
                         String message = "Stock code: " + s.getStockCode() + "\nHoldings: " + s.getHoldings() + "\nDividend price: " + s.getPayDiv().getDivPrice() + "\nPayment date: "+s.getPayDiv().getDay()+"/"+(s.getPayDiv().getMonth()+1)+"/"+s.getPayDiv().getYear();
                         Calendar c = Calendar.getInstance();
                         c.set(s.getPayDiv().getYear(), s.getPayDiv().getMonth(), s.getPayDiv().getDay());
+                        c.add(Calendar.DATE,-7);
 
-                        // cal just for testing purpsoses  - c is the right one
-                        Calendar cal = Calendar.getInstance();
-                        cal.add(Calendar.MINUTE, 1);
-
-                        Date currentTimePlusOneMinute = cal.getTime();
+//                        Calendar cal = Calendar.getInstance();
+//                        cal.add(Calendar.MINUTE, 1);
+//
+//                        Date currentTimePlusOneMinute = cal.getTime();
                         //schedule email
                         Timer timer = new Timer();
                         timer.schedule(new TimerTask() {
@@ -435,7 +436,7 @@ public class LoginServlet extends HttpServlet {
                                     throw new RuntimeException(e);
                                 }
                             }
-                        }, currentTimePlusOneMinute);
+                        }, c.getTime());
                         System.out.println("Scheduled email");
 
                         // Update user_stock

@@ -3,39 +3,28 @@ package sera.sera;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import jakarta.servlet.http.HttpSession;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes2.HistoricalDividend;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 import javax.mail.*;
-import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.sql.rowset.serial.SerialBlob;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.sql.*;
 import java.time.*;
 import java.util.*;
 import java.util.Date;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static sera.sera.LoginServlet.*;
 import static sera.sera.UserDB.login;
 
-public class Testing {
+public class Testing implements Runnable{
 //    public static void main(String[] args) throws IOException {
 //        String cookie = null;
 //
@@ -99,7 +88,7 @@ public class Testing {
 //        }
 //
 //    }
-public static void email(User user, String msg) throws AddressException {
+public static Runnable email(User user, String msg) throws AddressException {
     System.out.println("hi");
     // https://stackoverflow.com/questions/59069456/sending-an-email-using-gmail-through-java
 
@@ -113,10 +102,30 @@ public static void email(User user, String msg) throws AddressException {
     Properties properties = System.getProperties();
 
     // Setup mail server
+//    properties.put("mail.smtp.host", host);
+//    properties.put("mail.smtp.port", "465");
+//    properties.put("mail.smtp.ssl.enable", "true");
+//    properties.put("mail.smtp.auth", "true");
+//
+//    properties.put("mail.smtp.socketFactory.port", "465");
+//    properties.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+
+    properties.put("mail.smtp.auth", true);
+    properties.put("mail.smtp.starttls.enable", "true");
     properties.put("mail.smtp.host", host);
-    properties.put("mail.smtp.port", "465");
-    properties.put("mail.smtp.ssl.enable", "true");
-    properties.put("mail.smtp.auth", "true");
+    properties.put("mail.smtp.port", 587);
+    properties.put("mail.smtp.ssl.trust", host);
+
+//    final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+//    properties.setProperty("mail.smtp.host", "smtp.gmail.com");
+////    properties.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+////    properties.setProperty("mail.smtp.socketFactory.fallback", "false");
+//    properties.setProperty("mail.smtp.port", "465");
+//    properties.setProperty("mail.smtp.socketFactory.port", "465");
+//    properties.put("mail.smtp.auth", "true");
+//    properties.put("mail.debug", "true");
+//    properties.put("mail.store.protocol", "pop3");
+//    properties.put("mail.transport.protocol", "smtp");
 
     // Get the Session object.// and pass username and password
     Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
@@ -193,6 +202,7 @@ public static void email(User user, String msg) throws AddressException {
     } catch (ClassNotFoundException e) {
         throw new RuntimeException(e);
     }
+    return null;
 }
     public static void scheduleEmail(User user) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         // connection to database user_stock table
@@ -448,5 +458,25 @@ public static void main(String[] args) throws AddressException, NoSuchAlgorithmE
     Set<String> keyset = j.keySet();
     fetchStockAPI(test, j);
     scheduleEmail(test);
+    email(test, "hi");
 }
+
+    @Override
+    public void run() {
+        try {
+            main(null);
+        } catch (AddressException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
