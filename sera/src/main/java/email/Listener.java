@@ -25,6 +25,12 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        ServletContext sc = sce.getServletContext();
+        System.out.println("uhuhuh");
+        System.out.println(sc.getContextPath());
+        System.out.println(sc.getRealPath("src/main/webapp/img/seralogo.png"));
+        System.out.println(sc.getResourcePaths("/src/main/webapp/img"));
+
         scheduler = Executors.newSingleThreadScheduledExecutor();
         // scheduler.scheduleAtFixedRate(new DailyJob(), 0, 1, TimeUnit.DAYS);
         try {

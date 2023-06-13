@@ -470,7 +470,6 @@ public class LoginServlet extends HttpServlet {
 
         //email("sonja.hinting@gmail.com", "hi", "hi");
 
-
         try {
             User user = login(email, pw);
 

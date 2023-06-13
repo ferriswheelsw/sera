@@ -3,13 +3,15 @@ package email;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import jakarta.servlet.ServletContext;
 import yahoofinance.YahooFinance;
 import yahoofinance.histquotes2.HistoricalDividend;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.mail.internet.*;
+import javax.activation.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -72,7 +74,7 @@ public class Email implements Runnable {
             // fetch pay div
             yahoofinance.Stock stock = YahooFinance.get(stockCode);
             double er = j.get(stock.getCurrency()).getAsDouble();
-
+            String name = stock.getName();
 
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.YEAR, -1);
@@ -133,8 +135,42 @@ public class Email implements Runnable {
                         message.setSubject("SERA: Your dividend payment awaits you!");
 
                         // Now set the actual message
-                        message.setText("Stock code: " + stockCode + "\nHoldings: " + holding + "\nDividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "\nTotal payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "\nPayment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR));
+                        //message.setText("Congratulations! "+ name + "'s next payment date is coming soon! \n \n Stock code: " + stockCode + "\nHoldings: " + holding + "\nDividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "\nTotal payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "\nPayment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR)+"\n\nBest wishes,\nSERA TEAM");
 
+                        // This mail has 2 part, the BODY and the embedded image
+//                        MimeMultipart multipart = new MimeMultipart("related");
+//
+//                        // first part (the html)
+//                        BodyPart messageBodyPart = new MimeBodyPart();
+//                        messageBodyPart.setText("Congratulations! "+ name + "'s next payment date is coming soon! \n \n Stock code: " + stockCode + "\nHoldings: " + holding + "\nDividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "\nTotal payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "\nPayment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR)+"\n\nBest wishes,\nSERA TEAM");
+//
+//                        // add it
+//                        multipart.addBodyPart(messageBodyPart);
+
+                        MimeMultipart multipart = new MimeMultipart("related");
+                        // first part (the html)
+                        BodyPart messageBodyPart = new MimeBodyPart();
+                        String htmlText = "<H1>Congratulations! "+name+ "'s next payment date is coming soon!</H1><p>Stock code: " + stockCode + "<br>Holdings: " + holding + "<br>Dividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "<br>Total payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "<br>Payment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR)+"<br><br>Best wishes,<br>SERA TEAM<br><br></p><img src=\"cid:image\" width=\"362\" height=\"114\">";
+                        messageBodyPart.setContent(htmlText, "text/html");
+                        // add it
+                        multipart.addBodyPart(messageBodyPart);
+
+
+                        // second part (the image)
+                        messageBodyPart = new MimeBodyPart();
+
+                        DataSource fds = new FileDataSource(
+                                "C:\\Users\\sonja\\OneDrive\\Documents\\CSIA\\sera\\sera\\src\\main\\webapp\\img\\seralogo.png");
+
+                        messageBodyPart.setDataHandler(new DataHandler(fds));
+                        messageBodyPart.setFileName(fds.getName());
+                        messageBodyPart.setHeader("Content-ID", "<image>");
+
+                        // add image to the multipart
+                        multipart.addBodyPart(messageBodyPart);
+
+                        // put everything together
+                        message.setContent(multipart);
                         System.out.println("sending...");
                         // Send message
                         Transport.send(message);
@@ -173,6 +209,16 @@ public class Email implements Runnable {
 
     @Override
     public void run() {
+        String[] str = new String[1];
+        try {
+            this.main(str);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         //Establish connection
         System.out.println("abcdefghijklmnop");
         try {
@@ -222,6 +268,8 @@ public class Email implements Runnable {
                 yahoofinance.Stock stock = null;
                 stock = YahooFinance.get(stockCode);
                 double er = j.get(stock.getCurrency()).getAsDouble();
+                String name = stock.getName();
+
                 Calendar cal = Calendar.getInstance();
                 cal.add(Calendar.YEAR, -1);
                 List<HistoricalDividend> dividendList = null;
@@ -237,6 +285,7 @@ public class Email implements Runnable {
                     if (Period.between(divDay, today).getDays() <= 7 && (!emailStatus.equals("sent"))) {
                         System.out.println("emailStatus");
                         System.out.println(emailStatus);
+
                         //sendemail
 
                         System.out.println("hiiiiiii");
@@ -282,9 +331,35 @@ public class Email implements Runnable {
                             message.setSubject("SERA: Your dividend payment awaits you!");
 
                             // Now set the actual message
-                            message.setText("Stock code: " + stockCode + "\nHoldings: " + holding + "\nDividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "\nTotal payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "\nPayment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR));
+                            //message.setText("Stock code: " + stockCode + "\nHoldings: " + holding + "\nDividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "\nTotal payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "\nPayment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR));
 
-                            System.out.println("sending...");
+                            // https://www.tutorialspoint.com/javamail_api/javamail_api_send_inlineimage_in_email.htm
+
+                            MimeMultipart multipart = new MimeMultipart("related");
+                            // first part (the html)
+                            BodyPart messageBodyPart = new MimeBodyPart();
+                            String htmlText = "<H1>Congratulations! "+name+ "'s next payment date is coming soon!</H1><p>Stock code: " + stockCode + "<br>Holdings: " + holding + "<br>Dividend price per holding / " + cur + ": " + String.format("%.2f", divprice) + "<br>Total payment / " + cur + ": " + String.format("%.2f", divprice * holding) + "<br>Payment date: " + payDate.get(Calendar.DATE) + "/" + (payDate.get(Calendar.MONTH) + 1) + "/" + payDate.get(Calendar.YEAR)+"<br><br>Best wishes,<br>SERA TEAM<br><br></p><img src=\"cid:image\" width=\"362\" height=\"114\">";
+                            messageBodyPart.setContent(htmlText, "text/html");
+                            // add it
+                            multipart.addBodyPart(messageBodyPart);
+
+
+                            // second part (the image)
+                            messageBodyPart = new MimeBodyPart();
+
+                            DataSource fds = new FileDataSource("C:\\Users\\sonja\\OneDrive\\Documents\\CSIA\\sera\\sera\\src\\main\\webapp\\img\\seralogo.png");
+
+                            messageBodyPart.setDataHandler(new DataHandler(fds));
+                            messageBodyPart.setFileName(fds.getName());
+                            messageBodyPart.setHeader("Content-ID", "<image>");
+
+                            // add image to the multipart
+                            multipart.addBodyPart(messageBodyPart);
+
+                            // put everything together
+                            message.setContent(multipart);
+
+                            System.out.println("sendingsera...");
                             // Send message
                             Transport.send(message);
                             System.out.println("Sent message successfully....");
