@@ -19,20 +19,21 @@
         <a href="home">Home</a>
         <a href="portfolio">Portfolio</a>
         <a href="income">Income</a>
-        <a href="profile" class="bold">Profile</a>
+        <a href="profile" style="font-weight:bold">Profile</a>
     </div>
     <a href="login.jsp" class="logout">LOGOUT</a>
 </div>
 
-    <div style="position: relative;
-    top: 45%;
-    transform: translateY(-50%);">
+    <div style="position: absolute;
+    /*top: 45%;*/
+    /*transform: translateY(-50%); */
+    width: 100%;">
         <%
             if (request.getAttribute("message")!=null){
         %>
         <%--    https://www.w3schools.com/howto/howto_js_alert.asp--%>
         <%--    https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alerts--%>
-        <div class="alert success">
+        <div class="alert success" >
             <span class="closebtn">&times;</span>
             <strong>Success!</strong> <%=request.getAttribute("message").toString()%>
         </div>
@@ -52,52 +53,64 @@
         <%
             }
         %>
-        <div class = "profilediv" >
-            <p style="display: inline;">Stock portfolio CSV template: </p>
-            <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS6nm9PraoIMzKQdCL_XkvKL6impJc_Fmoi6PF-OyPmLWpwvnberTP7dqqroI7RX6iNGQVGV3spHRJl/pub?output=csv" class="csvlink">Download</a>
-        </div>
-        <div class="profilediv" >
-            <form id="uploadcsv" method="post" action="profile" enctype="multipart/form-data" onsubmit="return csvload()">
-                Choose a file: <input style="height: 30px; font-size:20px;" type="file" name="file" />
-                <input style="height: 30px;" type="submit" value="Upload" />
-            </form>
-        </div>
-        <div class="loader" style="display:none;" id="csvloader"></div>
-        <div class="profilediv">
-            <p>Select default currency: </p>
-            <form id="selectC" action="profile" method="GET" onsubmit="return curload()">
-                <select name="selectCur" style="height: 30px; font-size:25px;">
-                    <%String cur = ((User)request.getSession().getAttribute("user")).getDefaultCurrency();
-                        String[] currencies = new String[]{"HKD", "USD", "EUR", "JPY", "CNY", "GBP", "AUD", "CAD", "CHF", "SGD", "NZD", "KRW"};
-                        for (String c:currencies){
-                            if (c.equals(cur)){
+        <div style="display:inline-flex">
+            <img src="img/settingsgifgreen.gif" style="display:inline;position: absolute; left:30%; transform: translate(-50%, 50%);" width="450px">
+            <div style="position:absolute;left:63%; transform: translate(-50%, 120%); text-align:left;" class="animate-bottom" >
+                <div class = "profilediv">
+<%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
+                    <span>Stock portfolio CSV template: </span>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS6nm9PraoIMzKQdCL_XkvKL6impJc_Fmoi6PF-OyPmLWpwvnberTP7dqqroI7RX6iNGQVGV3spHRJl/pub?output=csv" class="csvlink">Download</a>
+                </div>
+                <div class="profilediv" >
+<%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
+                    <span>Upload CSV (portfolio): &nbsp; </span>
+                    <form id="uploadcsv" method="post" action="profile" enctype="multipart/form-data" onsubmit="return csvload()" style="display:inline; overflow:hidden;">
+                        <input style="height: 25px; font-size:15px; margin-right:-130px;overflow:hidden;" type="file" name="file" />
+                        <input class="csvlink" type="submit" value="Upload" />
+                    </form>
+                    <div class="loader" style="display:none; width:30px;height:30px;" id="csvloader"></div>
+                </div>
 
-                    %>
-                    <option value="<%=c%>" selected><%=c%></option>
-                    <%
-                    } else{
-                    %>        <option value="<%=c%>"><%=c%></option>
-                    <%
-                            }
-                        }%>
+                <div class="profilediv">
+<%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
+                    <span>Select default currency: &nbsp;</span>
+                    <form id="selectC" action="profile" method="GET" onsubmit="return curload()" style="display:inline;">
+                        <select name="selectCur" style="height: 25px; font-size:15px;">
+                            <%String cur = ((User)request.getSession().getAttribute("user")).getDefaultCurrency();
+                                String[] currencies = new String[]{"HKD", "USD", "EUR", "JPY", "CNY", "GBP", "AUD", "CAD", "CHF", "SGD", "NZD", "KRW"};
+                                for (String c:currencies){
+                                    if (c.equals(cur)){
 
-                </select>
-                <button type="submit" style="height: 30px;">Enter</button>
-            </form>
+                            %>
+                            <option value="<%=c%>" selected><%=c%></option>
+                            <%
+                            } else{
+                            %>        <option value="<%=c%>"><%=c%></option>
+                            <%
+                                    }
+                                }%>
+
+                        </select>
+                        <button type="submit" class="csvlink">Enter</button>
+                    </form>
+                    <div class="loader" style="display:none; width:30px; height:30px;" id="curloader"></div>
+                </div>
+
+            </div>
         </div>
-        <div class="loader" style="display:none;" id="curloader"></div>
-    </div>
+        </div>
+
 
 
 
 
     <script>
         function csvload() {
-            document.getElementById("csvloader").style.display = "block";
+            document.getElementById("csvloader").style.display = "inline-block";
             document.getElementById("uploadcsv").style.display = "none";
         }
         function curload() {
-            document.getElementById("curloader").style.display = "block";
+            document.getElementById("curloader").style.display = "inline-block";
             document.getElementById("selectC").style.display = "none";
         }
     </script>

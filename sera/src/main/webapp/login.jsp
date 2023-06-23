@@ -12,20 +12,39 @@
     <link rel="stylesheet" href="css/tables.css">
 </head>
 <body>
-<h1>Login</h1>
-<form action="home" method="post" onsubmit="return load()" class="animate-bottom" id="loginForm">
-    <p>Input email <input type = "text" name = "email" required/></p>
-    <p>Input password <input type = "text" name = "pw" required/></p>
-    <p><input type="submit" value="SUBMIT"/></p>
-</form>
-<%--https://www.w3schools.com/howto/howto_css_loader.asp--%>
-<div id="loginloader" class="loader" style="
+<div style="display:inline;">
+    <h2 style="float:left; margin:auto;">SERA</h2>
+    <p style="text-align: center; margin: auto;">Welcome to SERA</p>
+</div>
+
+<div style="display:inline;">
+    <img src="img/serasquare.png" width="500px" style="float:left; position: absolute;
+  top: 46%;
+  left: 32%;
+  transform: translate(-50%, -50%);" class="animate-bottom">
+    <div style="position: absolute;
+  top: 46%;
+  left: 62%;
+  transform: translate(-50%, -50%);">
+        <form action="home" method="post" onsubmit="return load()" class="animate-bottom" id="loginForm">
+            <p style="padding-bottom: 10px">Input email           :   <input type = "text" name = "email" required/></p>
+            <p style="padding-bottom: 10px">Input password          :   <input type = "text" name = "pw" required/></p>
+            <p><input type="submit" class="btn" value="SUBMIT" /></p>
+        </form>
+    </div>
+    <%--https://www.w3schools.com/howto/howto_css_loader.asp--%>
+    <div id="loginloader" class="loader" style="
 /*center of page*/
 /*https://blog.hubspot.com/website/center-div-css#center-div-vertically-css*/
 position: absolute;
-  top: 38%;
-  left: 46%;
-  transform: translate(-50%, -50%);"></div>
+  top: 41%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+width:60px;
+height:60px;"></div>
+</div>
+
+
 
 <script>
     function load() {

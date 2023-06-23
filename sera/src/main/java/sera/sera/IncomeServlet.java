@@ -64,7 +64,7 @@ public class IncomeServlet extends HttpServlet {
 
 
         int page = 1;
-        int recordsPerPage = 5;
+        int recordsPerPage = 10;
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(
                     request.getParameter("page"));

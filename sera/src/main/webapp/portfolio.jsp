@@ -21,7 +21,7 @@
     <h2 class="sera">SERA</h2>
     <div class = "nav">
         <a href="home">Home</a>
-        <a href="portfolio" class="bold">Portfolio</a>
+        <a href="portfolio" style="font-weight:bold">Portfolio</a>
         <a href="income">Income</a>
         <a href="profile">Profile</a>
     </div>
@@ -44,26 +44,26 @@
     %>
 </form>
 
-<h3>Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
+<h3 style="color:#009345">Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
 
-<table>
+<table id="ptable">
     <%ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");
     String cur = sL.get(0).getStockCur();%>
     <tr>
-        <td>Stock code</td>
-        <td>Current market price / <%=cur%></td>
+        <td style="font-weight:bold">Stock code</td>
+        <td>Market price / <%=cur%></td>
         <td>%1D</td>
         <td>1D PnL / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%></td>
         <td>%div</td>
         <td>1Y div / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%></td>
-        <td>No of ex-div dates per year</td>
+        <td>Ex-div dates per yr</td>
         <td>Quantity</td>
     </tr>
     <%
         for (Stock s : sL) {
     %>
     <tr>
-        <td><%=s.getStockCode()%></td>
+        <td style="font-weight:bold"><%=s.getStockCode()%></td>
         <td><%=String.format("%.2f", s.getMarketPrice())%></td>
         <td><%=String.format("%.2f", s.getPriceChange())%></td>
         <td><%=String.format("%.2f", s.getPnl())%></td>

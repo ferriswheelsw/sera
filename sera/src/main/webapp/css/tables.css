@@ -2,11 +2,13 @@
     font-family: 'reg';
     src: url("fonts/3-Helvetica Now Display/HelveticaNowDisplay-Regular.otf");
 }
-
+*{
+    font-family: "reg";
+}
 /* Style the tab */
 .tabb {
     overflow: hidden;
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
     background-color: #f1f1f1;
     /*width: -moz-min-content;*/
     /*width: -webkit-min-content;*/
@@ -29,7 +31,8 @@
 }
 
 .selected{
-    background-color: lavender;
+    /*background-color: #caefd0;*/
+    background-color: #d7f3dc;
     float: left;
     border: none;
     outline: none;
@@ -42,31 +45,86 @@
 
 /* Change background color of buttons on hover */
 .tabb input[type="submit"]:hover {
-    background-color: lightskyblue;
+    /*background-color: #37b34a;*/
+    background-color: #a5e4af;
 }
 
 /* Create an active/current tablink class */
 .tabb input[type="submit"].active {
-    background-color: lavenderblush;
+    background-color: #009345;
 }
 
 body{
     margin: 20px;
 }
 
-table, th, td {
-    border: 1px solid grey;
+#hometable table, #hometable th, #hometable td{
+    border: none;
+    padding: 5px 20px 5px 0px;
+    margin:20px 0px;
+}
+
+#ptable td, #ptable th{
+    border: 1px solid lightgray;
     border-collapse: collapse;
     padding: 10px;
+    width:12.5%;
+    text-align: center;
+    font-size:16px;
+}
+
+#ptable{
+    border: 1px solid gray;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#itable td, #itable th{
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+    padding: 10px;
+    text-align: center;
+    font-size:16px;
+}
+
+#itable{
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+    width: 100%;
+    display:block;
+    overflow-x:auto;
+    table-layout:fixed;
+}
+
+#itable tbody{
+    display: table;
+    width: 100%;
 }
 
 
 .pag{
-    margin-top:20px;
-    border: 20px lavender;
-    border-collapse: collapse;
+    /*margin-top:20px;*/
+    border:none;
+    /*border-collapse: collapse;*/
     border-spacing: 0;
-    background-color: lavender;
+    /*background-color: #a5e4af;*/
+    padding: 10px 20px 10px 0px;
+    border-spacing: 10px 0px;
+}
+
+.pag td{
+    border: 1px solid gray;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.pag td:hover{
+    font-weight:bold;
+    background-color:  #f1f1f1;
+}
+
+.wrappag{
+    margin: 0 -10px; overflow:hidden;
 }
 
 .nav{
@@ -74,7 +132,6 @@ table, th, td {
     justify-content: center;
     align-items: center;
     text-align: center;
-
 }
 
 .nav a{
@@ -83,11 +140,14 @@ table, th, td {
     padding: 5px 14px;
     text-decoration: none;
     font-size: 16px;
+    cursor: pointer;
 }
 
-.bold{
-    font-weight: bold;
+.nav a:hover{
+    font-weight:bold;
 }
+
+
 
 .navoverall{
     display: flex;
@@ -101,6 +161,12 @@ table, th, td {
     padding:5px 15px;
     text-align: right;
     margin:0;
+    cursor: pointer;
+}
+
+.logout:hover{
+    background-color: black;
+    color:white;
 }
 
 .sera{
@@ -128,22 +194,30 @@ table, th, td {
 
 .csvlink{
     border: 2px solid black;
-    border-radius: 16px;
-    padding:10px 30px;
-    text-align: right;
+    border-radius: 20px;
+    padding:10px 17px;
+    /*text-align: right;*/
     background-color: black;
     color:white;
-    font-size: 20px;
+    font-size: 15px;
     margin: 0 0 0 20px;
 }
 
+.csvlink:hover{
+    background-color:white;
+    color:black;
+    cursor:pointer;
+}
+
 .profilediv{
-    text-align: center;
-    padding: 20px;
+    text-align: left;
+    padding: 17px 0;
     display: table;
-    margin: auto;
-    font-size:30px;
+    /*margin: 0 auto;*/
+    font-size:17px;
     vertical-align: middle;
+
+
 }
 
 .alert {
@@ -159,30 +233,33 @@ table, th, td {
 .alert.info {background-color: #2196F3;}
 .alert.warning {background-color: #ff9800;}
 
-.closebtn {
-    margin-left: 15px;
+.btn {
     color: white;
+    background-color: black;
     font-weight: bold;
-    float: right;
-    font-size: 22px;
-    line-height: 20px;
+    font-size: 12px;
+    padding: 8px 15px;
     cursor: pointer;
     transition: 0.3s;
+    border-radius: 5px;
 }
 
-.closebtn:hover {
+.btn:hover {
+    background-color: white;
     color: black;
 }
 
 
 .loader {
     /*position: absolute;*/
-    margin: auto;
-    width: 120px;
-    height: 120px;
-    border: 16px solid #f3f3f3;
+    margin: 0 auto;
+
+    vertical-align:middle;
+    /*width: 60px;*/
+    /*height: 60px;*/
+    border: 8px solid #f3f3f3;
     border-radius: 50%;
-    border-top: 16px solid #ccccff;
+    border-top: 8px solid #caefd0;
     /*or #8b88f8*/
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
@@ -205,7 +282,7 @@ table, th, td {
     -webkit-animation-name: animatebottom;
     -webkit-animation-duration: 1s;
     animation-name: animatebottom;
-    animation-duration: 1s
+    animation-duration: 1s;
 }
 
 @-webkit-keyframes animatebottom {
