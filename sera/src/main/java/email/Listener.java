@@ -27,7 +27,9 @@ public class Listener implements ServletContextListener, HttpSessionListener, Ht
     public void contextInitialized(ServletContextEvent sce) {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         try {
+            System.out.println("checking");
             scheduler.scheduleAtFixedRate(new Email(), 0, 1, TimeUnit.DAYS);
+            System.out.println("checking done");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

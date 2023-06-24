@@ -241,7 +241,7 @@ public class User {
         List<List<String>> input = parseCsv(csvIS, ',');
         //CSVReader reader = new CSVReader(new FileReader(fileName));
 
-        String insertQuery = "Insert into user_stock (uid, symbol, holding) values (?,?,?)";
+        String insertQuery = "Insert into user_stock (uid, symbol, holding, emailStatus) values (?,?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(insertQuery);
         for(int count=4;count<input.size();count++){
             List<String> i = input.get(count);
@@ -255,6 +255,7 @@ public class User {
             pstmt.setInt(1,this.getUserID());
             pstmt.setString(2, i.get(0));
             pstmt.setString(3,i.get(3));
+            pstmt.setString(4,"null");
             pstmt.addBatch();
 
             // update stock db if specific stock not already in the db
