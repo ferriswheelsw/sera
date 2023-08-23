@@ -28,7 +28,7 @@
   transform: translate(-50%, -50%);">
         <form action="home" method="post" onsubmit="return load()" class="animate-bottom" id="loginForm">
             <p style="padding-bottom: 10px">Input email           :   <input type = "text" name = "email" required/></p>
-            <p style="padding-bottom: 10px">Input password          :   <input type = "text" name = "pw" required/></p>
+            <p style="padding-bottom: 10px">Input password          :   <input type = "password" name = "pw" required/></p>
             <p><input type="submit" class="btn" value="SUBMIT" /></p>
         </form>
     </div>

@@ -28,23 +28,43 @@
     <a href="login.jsp" class="logout">LOGOUT</a>
 </div>
 <br>
-<form action="portfolio" method="Get" class="tabb" style="margin: 0px">
-    <%
-        ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();
-        for (String market : markets1) {
-            if(market.equals(request.getAttribute("currentMarket"))){
-    %>
-    <input class="selected" type="submit" name="action" value=<%=market%>>
-    <%
-    } else{
-    %><input class="normal" type="submit" name="action" value=<%=market%>>
-    <%
+<div style="display:inline-block;vertical-align: middle;">
+    <form action="portfolio" method="Get" class="tabb" style="margin: 8px 30px 30px 0; float:left;">
+        <%
+            ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();
+            for (String market : markets1) {
+                if(market.equals(request.getAttribute("currentMarket"))){
+        %>
+        <input class="selected" type="submit" name="action" value=<%=market%>>
+        <%
+        } else{
+        %><input class="normal" type="submit" name="action" value=<%=market%>>
+        <%
+                }
             }
-        }
-    %>
-</form>
+        %>
+    </form>
 
-<h3 style="color:#009345">Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
+    <h3 style="color:#009345; float:right; display: inline-block; vertical-align: middle;">Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>
+
+</div>
+<%--<form action="portfolio" method="Get" class="tabb" style="margin: 0px">--%>
+<%--    <%--%>
+<%--        ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();--%>
+<%--        for (String market : markets1) {--%>
+<%--            if(market.equals(request.getAttribute("currentMarket"))){--%>
+<%--    %>--%>
+<%--    <input class="selected" type="submit" name="action" value=<%=market%>>--%>
+<%--    <%--%>
+<%--    } else{--%>
+<%--    %><input class="normal" type="submit" name="action" value=<%=market%>>--%>
+<%--    <%--%>
+<%--            }--%>
+<%--        }--%>
+<%--    %>--%>
+<%--</form>--%>
+
+<%--<h3 style="color:#009345">Total Income / <%=((User)request.getSession().getAttribute("user")).getDefaultCurrency()%>: ${totalIncome}</h3>--%>
 
 <table id="ptable">
     <%ArrayList<Stock> sL = (ArrayList<Stock>)request.getAttribute("stockList");

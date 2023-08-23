@@ -47,6 +47,7 @@
 .tabb input[type="submit"]:hover {
     /*background-color: #37b34a;*/
     background-color: #a5e4af;
+    font-weight:bold;
 }
 
 /* Create an active/current tablink class */
@@ -185,11 +186,11 @@ body{
 }
 
 .upcoming{
-    background-color: yellow;
+    background-color: #FAFA9B;
 }
 
 .estimated{
-    background-color: lightsalmon;
+    background-color: #FFA979;
 }
 
 .csvlink{
