@@ -29,24 +29,10 @@
     <a href="login.jsp" class="logout">LOGOUT</a>
 </div>
 <br>
-<%--<form action="income" method="Get" class="tabb">--%>
-<%--    <%--%>
-<%--        ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();--%>
-<%--        for (String market : markets1) {--%>
-<%--            if(market.equals(request.getAttribute("currentMarket"))){--%>
-<%--    %>--%>
-<%--    <input class="selected" type="submit" name="action" value=<%=market%>>--%>
-<%--    <%--%>
-<%--            } else{--%>
-<%--    %><input class="normal" type="submit" name="action" value=<%=market%>>--%>
-<%--    <%--%>
-<%--            }--%>
-<%--    }--%>
-<%--    %>--%>
-<%--</form>--%>
+
 
 <div style="display:inline-block;vertical-align: middle;">
-    <form action="portfolio" method="Get" class="tabb" style="margin: 8px 30px 30px 0; float:left;">
+    <form action="income" method="Get" class="tabb" style="margin: 8px 30px 30px 0; float:left;">
         <%
             ArrayList<String> markets1 = ((User)request.getSession().getAttribute("user")).getMarkets();
             for (String market : markets1) {

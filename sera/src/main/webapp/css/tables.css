@@ -5,20 +5,16 @@
 *{
     font-family: "reg";
 }
-/* Style the tab */
+/* Market tabs */
 .tabb {
     overflow: hidden;
-    /*border: 1px solid #ccc;*/
     background-color: #f1f1f1;
-    /*width: -moz-min-content;*/
-    /*width: -webkit-min-content;*/
-    /*width: min-content;*/
     display: inline-block;
     margin-top: 5px;
     margin-bottom: 25px;
 }
 
-/* Style the buttons inside the tab */
+/* Style the buttons inside the tab (individual markets) */
 .normal {
     background-color: inherit;
     float: left;
@@ -31,7 +27,6 @@
 }
 
 .selected{
-    /*background-color: #caefd0;*/
     background-color: #d7f3dc;
     float: left;
     border: none;
@@ -45,7 +40,6 @@
 
 /* Change background color of buttons on hover */
 .tabb input[type="submit"]:hover {
-    /*background-color: #37b34a;*/
     background-color: #a5e4af;
     font-weight:bold;
 }
@@ -55,16 +49,19 @@
     background-color: #009345;
 }
 
+/* Make sure content never touches edge of screen */
 body{
     margin: 20px;
 }
 
+/* Design specific to the table on the home page */
 #hometable table, #hometable th, #hometable td{
     border: none;
     padding: 5px 20px 5px 0px;
     margin:20px 0px;
 }
 
+/* Design specific to the table on the portfolio page */
 #ptable td, #ptable th{
     border: 1px solid lightgray;
     border-collapse: collapse;
@@ -80,6 +77,7 @@ body{
     width: 100%;
 }
 
+/* Design specific to the table on the income page */
 #itable td, #itable th{
     border: 1px solid lightgray;
     border-collapse: collapse;
@@ -102,13 +100,10 @@ body{
     width: 100%;
 }
 
-
+/* Design specific to the pagination table */
 .pag{
-    /*margin-top:20px;*/
     border:none;
-    /*border-collapse: collapse;*/
     border-spacing: 0;
-    /*background-color: #a5e4af;*/
     padding: 10px 20px 10px 0px;
     border-spacing: 10px 0px;
 }
@@ -128,6 +123,7 @@ body{
     margin: 0 -10px; overflow:hidden;
 }
 
+/* Top navigation bar */
 .nav{
     overflow:hidden;
     justify-content: center;
@@ -135,6 +131,7 @@ body{
     text-align: center;
 }
 
+/* Links inside navigation bar */
 .nav a{
     display: inline-block;
     text-align: center;
@@ -149,13 +146,13 @@ body{
 }
 
 
-
+/* Div around navigation bar */
 .navoverall{
     display: flex;
     justify-content: space-between;
-    font-family: "reg";
 }
 
+/* Logout button */
 .logout{
     border: 1px solid black;
     border-radius: 8px;
@@ -170,6 +167,7 @@ body{
     color:white;
 }
 
+/* SERA logo */
 .sera{
     text-align:left;
     padding:0;
@@ -181,6 +179,7 @@ body{
     background-color: lavender;
 }
 
+/* Colours to differentiate past / upcoming / estimated dividends (income page) */
 .past{
     background-color: lightgreen;
 }
@@ -193,11 +192,11 @@ body{
     background-color: #FFA979;
 }
 
+/* CSV template download button */
 .csvlink{
     border: 2px solid black;
     border-radius: 20px;
     padding:10px 17px;
-    /*text-align: right;*/
     background-color: black;
     color:white;
     font-size: 15px;
@@ -210,17 +209,17 @@ body{
     cursor:pointer;
 }
 
+/* Profile page */
 .profilediv{
     text-align: left;
     padding: 17px 0;
     display: table;
-    /*margin: 0 auto;*/
     font-size:17px;
     vertical-align: middle;
 
-
 }
 
+/* Alert for updates to profile */
 .alert {
     padding: 20px;
     background-color: #f44336;
@@ -234,6 +233,7 @@ body{
 .alert.info {background-color: #2196F3;}
 .alert.warning {background-color: #ff9800;}
 
+/* Design for buttons on profile page */
 .btn {
     color: white;
     background-color: black;
@@ -250,18 +250,13 @@ body{
     color: black;
 }
 
-
+/* Loading animation */
 .loader {
-    /*position: absolute;*/
     margin: 0 auto;
-
     vertical-align:middle;
-    /*width: 60px;*/
-    /*height: 60px;*/
     border: 8px solid #f3f3f3;
     border-radius: 50%;
     border-top: 8px solid #caefd0;
-    /*or #8b88f8*/
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
     display:none;
@@ -277,7 +272,6 @@ body{
     100% { transform: rotate(360deg); }
 }
 
-/* Add animation to "page content" */
 .animate-bottom {
     position: relative;
     -webkit-animation-name: animatebottom;
@@ -294,9 +288,4 @@ body{
 @keyframes animatebottom {
     from{ bottom:-100px; opacity:0 }
     to{ bottom:0; opacity:1 }
-}
-
-#myDiv {
-    display: none;
-    text-align: center;
 }
