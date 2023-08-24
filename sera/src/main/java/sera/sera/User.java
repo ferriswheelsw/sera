@@ -1,5 +1,7 @@
 package sera.sera;
 
+import yahoofinance.YahooFinance;
+
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -243,18 +245,20 @@ public class User {
 
         String insertQuery = "Insert into user_stock (uid, symbol, holding, emailStatus) values (?,?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(insertQuery);
-        for(int count=4;count<input.size();count++){
+        for(int count=2;count<input.size();count++){
             List<String> i = input.get(count);
 //        }
 //        for (List<String> i : input){
-            // i.get(1) = stockCode, i.get(2) = name, i.get(3) = stock market i.get(4) = holding
+            // i.get(0) = stockCode, i.get(1) = name, i.get(2) = stock market i.get(3) = holding
+
+            //i.get(0) = stockCode, i.get(1) = holding
             System.out.println("testtt");
             System.out.println(this.getUserID());
             System.out.println(i.get(0));
-            System.out.println(i.get(3));
+            System.out.println(i.get(1));
             pstmt.setInt(1,this.getUserID());
             pstmt.setString(2, i.get(0));
-            pstmt.setString(3,i.get(3));
+            pstmt.setString(3,i.get(1));
             pstmt.setString(4,"null");
             pstmt.addBatch();
 
@@ -267,8 +271,11 @@ public class User {
                 System.out.println(i.get(1) + "exists");
             }else{
                 System.out.println(i.get(1) + "not in");
-                sera.sera.StockDB.insertStock(i.get(0), i.get(2), i.get(1));
-                System.out.println(i.get(1) + "in");
+                yahoofinance.Stock stock = YahooFinance.get(i.get(0));
+                String market = stock.getStockExchange();
+                String name = stock.getName();
+                sera.sera.StockDB.insertStock(i.get(0), market, name);
+                System.out.println(i.get(0) + "in");
             }
 
         }

@@ -54,12 +54,12 @@
             }
         %>
         <div style="display:inline-flex">
-            <img src="img/settingsgifgreen.gif" style="display:inline;position: absolute; left:30%; transform: translate(-50%, 50%);" width="450px">
-            <div style="position:absolute;left:63%; transform: translate(-50%, 120%); text-align:left;" class="animate-bottom" >
+            <img src="img/settingsgifgreen.gif" style="display:inline;position: absolute; left:30%; transform: translate(-50%, 38%);" width="450px">
+            <div style="position:absolute;left:63%; transform: translate(-50%, 100%); text-align:left;" class="animate-bottom" >
                 <div class = "profilediv">
 <%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
                     <span>Stock portfolio CSV template: </span>
-                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vS6nm9PraoIMzKQdCL_XkvKL6impJc_Fmoi6PF-OyPmLWpwvnberTP7dqqroI7RX6iNGQVGV3spHRJl/pub?output=csv" class="csvlink">Download</a>
+                    <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ0ag8m4jcwRRM7k48gFWRxTM_tX8XgrzSlk5Jmg-9vyQq1bFh1iZB9gCvceLoPhzcOw7d9xNQNXqrg/pub?output=csv" class="csvlink">Download</a>
                 </div>
                 <div class="profilediv" >
 <%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
@@ -68,7 +68,9 @@
                         <input style="height: 25px; font-size:15px; margin-right:-130px;overflow:hidden;" type="file" name="file" />
                         <input class="csvlink" type="submit" value="Upload" />
                     </form>
-                    <div class="loader" style="display:none; width:30px;height:30px;" id="csvloader"></div>
+                    <div class="loader" id="csvloader" style="display:none; width:20px;height:20px;border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #caefd0; margin-left:10px;" ></div>
                 </div>
 
                 <div class="profilediv">
