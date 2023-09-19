@@ -98,20 +98,23 @@
 
 <table class="pag">
     <tr>
-<%--For displaying Previous link except for the 1st page --%>
-<%if ((int)request.getAttribute("currentPage")!=1){%>
-    <td class="pag"><a href="income?page=${currentPage - 1}">Previous</a></td>
-<%}
-for(int i=1;i<((int)request.getAttribute("noOfPages")+1);i++){
-    %>
-    <td class="pag"><a href="income?page=<%=i%>"><%=i%></a></td>
-    <%
-}%>
 
-<%--For displaying Next link --%>
+    <%--Displaying Previous link except for the 1st page--%>
+
+    <%if ((int)request.getAttribute("currentPage")!=1){%>
+        <td class="pag"><a href="income?action=${currentMarket}&page=${currentPage - 1}">Previous</a></td>
+    <%}
+
+    for(int i=1;i<((int)request.getAttribute("noOfPages")+1);i++){
+    %>
+    <td class="pag"><a href="income?action=${currentMarket}&page=<%=i%>"><%=i%></a></td>
+    <%
+    }%>
+
+    <%--Displaying Next link--%>
 
     <%if ((int)request.getAttribute("currentPage")< (int)request.getAttribute("noOfPages")){%>
-    <td class="pag"><a href="income?page=${currentPage + 1}">Next</a></td>
+    <td class="pag"><a href="income?action=${currentMarket}&page=${currentPage + 1}">Next</a></td>
     <%}%>
 
     </tr>

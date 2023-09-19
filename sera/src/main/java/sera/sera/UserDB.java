@@ -23,6 +23,7 @@ public class UserDB {
     public static void insert(int id, String fN, String lN, String email, String pw, String cur) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException, InvalidKeySpecException {
         // hash password
         SecureRandom random = new SecureRandom();
+
         KeySpec spec = new PBEKeySpec(pw.toCharArray(), salt, 65536, 128);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         byte[] hash = factory.generateSecret(spec).getEncoded();
@@ -64,7 +65,6 @@ public class UserDB {
         // Close all the connections
         st.close();
         con.close();
-
     }
 
     // Update an existing user's information
@@ -110,7 +110,6 @@ public class UserDB {
         // Close all the connections
         st.close();
         con.close();
-
     }
 
     // login and validation

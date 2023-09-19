@@ -5,10 +5,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Stock {
+    // most recently announced / released dividend
+    private Dividend lastDiv;
+    // announced, upcoming dividend (null if nothing announced)
+    private Dividend payDiv;
+    // list of all past, released dividends
+    private ArrayList<Dividend> dividends;
+
     private String stockCode;
     private String market;
     private double marketPrice;
-    private ArrayList<Dividend> dividends;
+
     private double percentdiv;
     private double totaldiv;
     private int divfreq;
@@ -18,13 +25,13 @@ public class Stock {
     private double pnl;
     private int holdings;
 
-    // NEW ATTRIBUTES
-    private Dividend lastDiv;
+
+
     private int gap;
 
     private String stockCur;
 
-    private Dividend payDiv;
+
 
     public Dividend getPayDiv() {
         return payDiv;

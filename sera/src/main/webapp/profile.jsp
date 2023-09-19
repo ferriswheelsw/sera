@@ -64,6 +64,7 @@
                 <div class="profilediv" >
 <%--                    <img src="img/seranopadding.png" height="35px" style="padding-right:50px; display:inline; vertical-align:middle;">--%>
                     <span>Upload CSV (portfolio): &nbsp; </span>
+                    <%--form to upload the CSV file as a multipart--%>
                     <form id="uploadcsv" method="post" action="profile" enctype="multipart/form-data" onsubmit="return csvload()" style="display:inline; overflow:hidden;">
                         <input style="height: 25px; font-size:15px; margin-right:-130px;overflow:hidden;" type="file" name="file" />
                         <input class="csvlink" type="submit" value="Upload" />

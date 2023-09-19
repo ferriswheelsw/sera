@@ -15,9 +15,6 @@ import java.util.List;
 public class PortfolioServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        request.
-        System.out.println("get");
-
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
 

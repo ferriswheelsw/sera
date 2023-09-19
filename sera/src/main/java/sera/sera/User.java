@@ -13,14 +13,16 @@ import static sera.sera.UserDB.insert;
 import static sera.sera.UserDB.update;
 
 public class User {
+    // stores all stocks owned by user
+    private ArrayList<Stock> stocks;
+
     private int UserID;
     private String firstName;
     private String lastName;
     private String email;
     private Blob password;
     private String defaultCurrency;
-    private ArrayList<Stock> stocks;
-    // we dont need this integer list for holdings
+
     private ArrayList<Integer> holdings;
     private ArrayList<String> markets;
 
@@ -166,69 +168,64 @@ public class User {
 
     }
 
-    // parse CSV
+    // parse CSV into a nested list of strings
     public static List<List<String>> parseCsv(InputStream csvInput, char csvSeparator) {
 
-        // Prepare.
+        // Prepare
         BufferedReader csvReader = null;
         List<List<String>> csvList = new ArrayList<List<String>>();
         String csvRecord = null;
 
-        // Process records.
+        // Process csv
         try {
+            // initialise new csv reader
             csvReader = new BufferedReader(new InputStreamReader(csvInput, "UTF-8"));
+            // call the parseCsvRecord method and add it to the nested list csvList
             while ((csvRecord = csvReader.readLine()) != null) {
                 csvList.add(parseCsvRecord(csvRecord, csvSeparator));
             }
         } catch (IOException e) {
             throw new RuntimeException("Reading CSV failed.", e);
         } finally {
-            if (csvReader != null)
+            if (csvReader != null) {
                 try {
                     csvReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return csvList;
     }
 
-    /**
-     * CSV record parser. Convert a CSV record to a List of Strings representing the fields of the
-     * CSV record. The CSV record is expected to be separated by the specified CSV field separator.
-     * @param record The CSV record.
-     * @param csvSeparator The CSV field separator to be used.
-     * @return A List of Strings representing the fields of each CSV record.
-     */
     private static List<String> parseCsvRecord(String record, char csvSeparator) {
 
-        // Prepare.
+        // Prepare
         boolean quoted = false;
         StringBuilder fieldBuilder = new StringBuilder();
         List<String> fields = new ArrayList<String>();
 
-        // Process fields.
+        // Process
         for (int i = 0; i < record.length(); i++) {
             char c = record.charAt(i);
             fieldBuilder.append(c);
 
+            // detect nested quotes
             if (c == '"') {
-                quoted = !quoted; // Detect nested quotes.
+                quoted = !quoted;
             }
 
-            if ((!quoted && c == csvSeparator) // The separator ..
-                    || i + 1 == record.length()) // .. or, the end of record.
-            {
-                String field = fieldBuilder.toString() // Obtain the field, ..
-                        .replaceAll(csvSeparator + "$", "") // .. trim ending separator, ..
-                        .replaceAll("^\"|\"$", "") // .. trim surrounding quotes, ..
-                        .replace("\"\"", "\""); // .. and un-escape quotes.
-                fields.add(field.trim()); // Add field to List.
-                fieldBuilder = new StringBuilder(); // Reset.
+            // if detected separator or at the end of the record
+            if ((!quoted && c == csvSeparator) || i + 1 == record.length()) {
+                String field = fieldBuilder.toString() // Get the field,
+                        .replaceAll(csvSeparator + "$", "") // cut off ending separator,
+                        .replaceAll("^\"|\"$", "") // cut off surrounding quotes,
+                        .replace("\"\"", "\""); // and the un-escape quotes.
+                fields.add(field.trim()); // add field to List
+                fieldBuilder = new StringBuilder(); // reset the field builder
             }
         }
-
         return fields;
     }
 

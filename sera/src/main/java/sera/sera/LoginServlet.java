@@ -71,21 +71,19 @@ import java.util.regex.Pattern;
 public class LoginServlet extends HttpServlet {
     public static JsonObject fetchCurrencyAPI(User user, HttpSession session) throws IOException {
         // API - currency
-
-
         String url_str = "https://v6.exchangerate-api.com/v6/0e01e6c4ed84843e593f49ff/latest/"+user.getDefaultCurrency();
 
-// Making Request
+        // Making Request
         URL url = new URL(url_str);
         HttpURLConnection request1 = (HttpURLConnection) url.openConnection();
         request1.connect();
 
-// Convert to JSON
+        // Convert to JSON
         JsonParser jp = new JsonParser();
         JsonElement root = jp.parse(new InputStreamReader((InputStream) request1.getContent()));
         JsonObject jsonobj = root.getAsJsonObject();
 
-// Accessing object
+        // Accessing object
         JsonObject j = (JsonObject) jsonobj.get("conversion_rates");
         Set<String> keyset = j.keySet();
         Iterator<String> keys = keyset.iterator();
@@ -99,36 +97,25 @@ public class LoginServlet extends HttpServlet {
         }
         return j;
     }
+
     public static void fetchStockAPI(User user, JsonObject j) throws IOException {
-        // API - stock - currently only have symbol market holding for a stock
-        // i need market price, dividends, avgdiv, totaldiv, divfreq, price change, pnl
-        System.out.println("hihi");
         for (Stock s : user.getStocks()){
             yahoofinance.Stock stock = YahooFinance.get(s.getStockCode());
+            // fetch exchange rate from the set fetched from currency API
             double er = j.get(stock.getCurrency()).getAsDouble();
+            // fetch current price, price change from yesterday, yesterday's closing price, dividend yield (in % and the actual value), name of currency
             double price = stock.getQuote().getPrice().doubleValue();
-            System.out.println(price);
-            System.out.println("price");
             double change = stock.getQuote().getChangeInPercent().doubleValue();
-            System.out.println(change);
-            System.out.println("change");
             double prevclosing = stock.getQuote().getPreviousClose().doubleValue();
-            System.out.println(prevclosing);
-            System.out.println("prevclosing");
             double percentdiv = 0;
             double totaldiv = 0;
             if (stock.getDividend().getAnnualYield()!= null){
                 percentdiv = stock.getDividend().getAnnualYieldPercent().doubleValue();
-                System.out.println(percentdiv);
-                System.out.println("percentdiv");
                 totaldiv = stock.getDividend().getAnnualYield().doubleValue()*(double)s.getHoldings()/er;
-                System.out.println(totaldiv);
-                System.out.println("totaldiv");
             }
             String stockCur = stock.getCurrency();
-            System.out.print("Currency: ");
-            System.out.println(stockCur);
 
+            // store everything in the session
             s.setMarketPrice(price);
             s.setPriceChange(change);
             s.setPnl((price-prevclosing)*s.getHoldings());
@@ -136,90 +123,56 @@ public class LoginServlet extends HttpServlet {
             s.setTotaldiv(totaldiv);
             s.setStockCur(stockCur);
 
-            // dividends in past 1Y
+            // fetch all dividends in past 1Y
             Calendar cal = Calendar.getInstance();
-//                    cal.set(Calendar.MONTH, 0);
             cal.add(Calendar.YEAR,-1);
-
             List<HistoricalDividend> dividendList = stock.getDividendHistory(cal);
-            System.out.println(dividendList.size());
+            // set dividend frequency (per year) to be stored in session
             s.setDivfreq(dividendList.size());
 
-            // TESTING
-            System.out.println(" ");
-            System.out.println("TESTING - price ver 1" + s.getStockCode());
-            for (HistoricalDividend d: dividendList){
-                printCal(d.getDate());
-                System.out.println(d.getAdjDividend().doubleValue()/er);
-            }
-            System.out.println(" ");
-
-
-
-            int exdivToPay = 0;
-
+            // if list is empty we don't need to store / estimate any dividends
             if(dividendList.size()>0){
-
+                // account for the case when there is only one dividend (nothing to compare it to)
                 if (dividendList.size()==1){
+                    // default 1-year gap - stored as attribute of stock (in session)
                     s.setGap(12);
-                }else{
+                }
+                // otherwise: calculate gap between most recent and 2nd most recent dividend date
+                else{
                     Calendar start = dividendList.get(dividendList.size()-2).getDate();
                     Calendar end = dividendList.get(dividendList.size()-1).getDate();
-                    printCal(start);
-                    printCal(end);
+                    // to get total months between 2 dates and compare day of the month - must convert to LocalDate
                     LocalDate lstart = LocalDateTime.ofInstant(start.toInstant(), ZoneId.systemDefault()).toLocalDate();
                     LocalDate lend = LocalDateTime.ofInstant(end.toInstant(), ZoneId.systemDefault()).toLocalDate();
                     int sgap = (int) Period.between(lstart,lend).toTotalMonths();
-
+                    // compare day of the month - if over half a month apart will round up the gap
+                    // eg if 2nd last div = Jan 1st and last div = Feb 28th --> will round up to 2 months (and not 1 month)
                     if (Period.between(lstart,lend).getDays()>=15){
                         sgap++;
                     }
-
-                    System.out.println("sgap");
-                    System.out.println(sgap);
-
+                    // stored as attribute of stock (in session)
                     s.setGap(sgap);
                 }
+
+                // get information on the most recent dividend
                 double divprice = dividendList.get(dividendList.size()-1).getAdjDividend().doubleValue()/er;
-                System.out.println("price2");
-                System.out.println(divprice);
                 Calendar date = dividendList.get(dividendList.size()-1).getDate();
-                System.out.println(date.get(Calendar.MONTH));
-
-                if (stock.getDividend().getPayDate()!=null){
-                    System.out.println("printingtesting");
-                    System.out.println(stock.getDividend().getPayDate().get(Calendar.MONTH));
-                    System.out.println(date.get(Calendar.MONTH));
-                    System.out.println(s.getGap());
-                    if (stock.getDividend().getPayDate().get(Calendar.MONTH) - (date.get(Calendar.MONTH)+s.getGap())>0){
-                        exdivToPay = stock.getDividend().getPayDate().get(Calendar.MONTH) - (date.get(Calendar.MONTH)+s.getGap());
-                    }else if (stock.getDividend().getPayDate().get(Calendar.MONTH)-(date.get(Calendar.MONTH))<s.getGap()){
-                        exdivToPay = stock.getDividend().getPayDate().get(Calendar.MONTH)-(date.get(Calendar.MONTH));
-                    }
-                    System.out.println("exdivtopay");
-                    System.out.println(exdivToPay);
-                }
-
-                System.out.println("STOCKK" + s.getStockCode());
-                System.out.println(date.get(Calendar.MONTH));
-//                        date.add(Calendar.MONTH, exdivToPay);
-                System.out.println(date.get(Calendar.MONTH));
-                s.setLastDiv(new Dividend(date.get(Calendar.MONTH)+exdivToPay, date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
-
-                //expected div
                 Calendar payDate = stock.getDividend().getPayDate();
-                System.out.println("PAYPAY");
 
-                if (payDate != null && (Calendar.getInstance().compareTo(payDate)==-1)){
-                    System.out.println("AYY");
-                    printCal(payDate);
-                    s.setPayDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
-                }else if (payDate!=null){
-                    System.out.println("beep");
-                    printCal(payDate);
-                    s.setLastDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
+                // store info on the last confirmed dividend paydate as an attribute of stock (in session)
+                s.setLastDiv(new Dividend(date.get(Calendar.MONTH), date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
+
+                // if the API has a valid expected pay date stored
+                if (payDate!=null){
+                    // the month from the API is one month ahead of how I store my other dates (Java Calendars start from month 0 (January))
+                    payDate.add(Calendar.MONTH,-1);
+                    // validate that the pay date is after today
+                    if ((Calendar.getInstance().compareTo(payDate)==-1)){
+                        // store this as both the next upcoming dividend pay date and the latest confirmed dividend paydate (in session)
+                        s.setPayDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
+                        s.setLastDiv(new Dividend(payDate.get(Calendar.MONTH), payDate.get(Calendar.YEAR), payDate.get(Calendar.DATE), s.getStockCode(), divprice));
+                    }
                 }
-
             }
 
 
@@ -237,14 +190,8 @@ public class LoginServlet extends HttpServlet {
                 System.out.println("dividend");
                 System.out.println(date.get(Calendar.YEAR)+" "+(date.get(Calendar.MONTH))+" "+date.get(Calendar.DATE));
 
-                // checking if the dividend was after Jan 1st of this year
+                // checking if the dividend is in this year (2023)
                 if (date.get(Calendar.YEAR) == (Year.now().getValue())) {
-                    System.out.println(date.get(Calendar.YEAR));
-                    System.out.println(Year.now().getValue());
-                    printCal(date);
-                    date.add(Calendar.MONTH, exdivToPay);
-                    System.out.println("lcheck");
-                    printCal(date);
                     dividends.add(new Dividend(date.get(Calendar.MONTH), date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
                 }
             }
@@ -252,38 +199,43 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    // to be called when loading home page
     public static ArrayList<Stock> topFive(User user){
+        // get a complete list of all the stocks owned by user (stored in the session)
         ArrayList<Stock> unsorted = user.getStocks();
+        // initialise an empty ArrayList to store only the top five
         ArrayList<Stock> sorted = new ArrayList<>();
-        // selectionsort
+        // track position of unsorted section of the unsorted ArrayList
         int count = 0;
         while(sorted.size()<5 && sorted.size()<unsorted.size()){
-            System.out.println(sorted.size());
-            if (sorted.size()>=1){
-                for(Stock s : sorted){
-                    System.out.printf(s.getStockCode() + " ");
-                }
-            }
-            System.out.println("abcde");
+            // track index of the largest value so far
             int maxindex = count;
+            // track the actual largest value so far
             double max = unsorted.get(count).getPriceChange();
+            // for loop to loop through all values in the unsorted section
             for (int j=count;j<unsorted.size();j++){
+                // compare each value with the current max
                 if (unsorted.get(j).getPriceChange()>max){
+                    // update max and maxindex variables
                     maxindex = j;
                     max = unsorted.get(j).getPriceChange();
                 }
             }
+            // add the max to the sorted list (so the first one added is the largest value in the unsorted Arraylist)
             sorted.add(new Stock(unsorted.get(maxindex)));
+            // if the max value is not at the beginning of the unsorted list, right after the sorted section of the unsorted Arraylist
+            // then that value should be moved to the front, at the end of the sorted section and in front of the unsorted section
             if (count!=maxindex){
                 Stock temp = new Stock(unsorted.get(maxindex));
                 unsorted.remove(maxindex);
                 unsorted.add(count, temp);
             }
+            // now there is one less value to sort through and we move the start of the unsorted section to the next value
             count++;
         }
        return sorted;
-
     }
+
     public static void email(User user, String msg) throws AddressException {
         System.out.println("hi");
         // https://stackoverflow.com/questions/59069456/sending-an-email-using-gmail-through-java
@@ -381,13 +333,7 @@ public class LoginServlet extends HttpServlet {
         }
     }
         public static void scheduleEmail(User user) throws ClassNotFoundException, SQLException {
-            // connection to database user_stock table
-            // if reminder column is null and paydiv is not null then email
-            // set reminder column to true
-            // but when do i turn reminder column false
-            // turn it off when email sent
-
-            //Establish connection
+            //Establish connection to database
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/seraschema", "root", "Appletree1!");
             Statement stmt = con.createStatement();
@@ -400,7 +346,7 @@ public class LoginServlet extends HttpServlet {
             while (rs1.next()) {
                 System.out.println(rs1.getString("symbol"));
                 Stock s = null;
-                //linear search
+                //linear search for a particular stock in the user's list of stocks
                 for (Stock stock : user.getStocks()) {
                     if (stock.getStockCode().equals(rs1.getString("symbol"))) {
                         s = stock;
@@ -408,6 +354,7 @@ public class LoginServlet extends HttpServlet {
                 }
 
                 System.out.println(s.getStockCode());
+
                 if (s.getPayDiv() != null) {
                     System.out.println(rs1.getString("emailStatus"));
                     if (Objects.equals(rs1.getString("emailStatus"), "sent")) {
@@ -416,16 +363,14 @@ public class LoginServlet extends HttpServlet {
                         System.out.println("scheduled");
                     }else{
                         System.out.println("hi");
+
+                        // Email content
                         String message = "Stock code: " + s.getStockCode() + "\nHoldings: " + s.getHoldings() + "\nDividend price: " + s.getPayDiv().getDivPrice() + "\nPayment date: "+s.getPayDiv().getDay()+"/"+(s.getPayDiv().getMonth()+1)+"/"+s.getPayDiv().getYear();
+                        // Get the date of 7 days before the payment date
                         Calendar c = Calendar.getInstance();
                         c.set(s.getPayDiv().getYear(), s.getPayDiv().getMonth(), s.getPayDiv().getDay());
                         c.add(Calendar.DATE,-7);
-
-//                        Calendar cal = Calendar.getInstance();
-//                        cal.add(Calendar.MINUTE, 1);
-//
-//                        Date currentTimePlusOneMinute = cal.getTime();
-                        //schedule email
+                        // Schedule the email to send on that day
                         Timer timer = new Timer();
                         timer.schedule(new TimerTask() {
                             @Override
@@ -437,6 +382,8 @@ public class LoginServlet extends HttpServlet {
                                 }
                             }
                         }, c.getTime());
+
+
                         System.out.println("Scheduled email");
 
                         // Update user_stock

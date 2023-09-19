@@ -15,7 +15,6 @@ public class StockDB {
 
         // Insert new user
         PreparedStatement create = con.prepareStatement("insert into seraschema.stock values(?,?,?)");
-
         create.setString(1, stockCode);
         create.setString(2, market);
         create.setString(3, name);

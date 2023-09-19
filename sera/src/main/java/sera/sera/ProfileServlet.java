@@ -65,13 +65,16 @@ public class ProfileServlet extends HttpServlet {
         System.out.println("profile!");
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
+
+        // csv file is fetched from http request
         if (request.getPart("file") == null) {
             System.out.println("no file");
-
         } else {
             System.out.println("file");
-            Part filePart = request.getPart("file"); // Retrieves <input type="file" name="file">
+            // Fetch <input type="file" name="file">
+            Part filePart = request.getPart("file");
             InputStream fileContent = filePart.getInputStream();
+            // call upload csv method to update database
             try {
                 user.uploadCSV(fileContent);
             } catch (ClassNotFoundException e) {
@@ -79,7 +82,7 @@ public class ProfileServlet extends HttpServlet {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-
+            // update user stocks in session with new stocks stored in database
             try {
                 user.updatestocks();
             } catch (ClassNotFoundException e) {
@@ -87,8 +90,10 @@ public class ProfileServlet extends HttpServlet {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+            // fetch data from APIs again for updated stock list
             JsonObject j = fetchCurrencyAPI(user, session);
             fetchStockAPI(user, j);
+            // send success message back
             request.setAttribute("message", "Portfolio update success!");
             request.getRequestDispatcher("/profile.jsp").forward(request, response);
         }
