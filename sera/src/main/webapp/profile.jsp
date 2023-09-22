@@ -30,6 +30,8 @@
     width: 100%;">
         <%
             if (request.getAttribute("message")!=null){
+                if(request.getAttribute("message").toString()=="Portfolio update success!")
+                {
         %>
         <%--    https://www.w3schools.com/howto/howto_js_alert.asp--%>
         <%--    https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_alerts--%>
@@ -49,9 +51,29 @@
                 }
             }
         </script>
+        <%
+            } else{
+        %>
+        <div class="alert warning" >
+            <span class="closebtn">&times;</span>
+            <strong>FAIL : </strong> <%=request.getAttribute("message").toString()%>
+        </div>
+        <script>
+            var close = document.getElementsByClassName("closebtn");
+            var i;
+
+            for (i = 0; i < close.length; i++) {
+                close[i].onclick = function(){
+                    var div = this.parentElement;
+                    div.style.opacity = "0";
+                    setTimeout(function(){ div.style.display = "none"; }, 600);
+                }
+            }
+        </script>
 
         <%
             }
+         }
         %>
         <div style="display:inline-flex">
             <img src="img/settingsgifgreen.gif" style="display:inline;position: absolute; left:30%; transform: translate(-50%, 38%);" width="450px">

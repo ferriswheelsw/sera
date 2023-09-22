@@ -54,6 +54,10 @@ body{
     margin: 20px;
 }
 
+#logintable tr, #logintable td, #logintable th{
+    padding: 7px 10px 3px 0;
+}
+
 /* Design specific to the table on the home page */
 #hometable table, #hometable th, #hometable td{
     border: none;
@@ -231,7 +235,7 @@ body{
 
 .alert.success {background-color: #04AA6D;}
 .alert.info {background-color: #2196F3;}
-.alert.warning {background-color: #ff9800;}
+.alert.warning {background-color: #ff5c5c;}
 
 /* Design for buttons on profile page */
 .btn {

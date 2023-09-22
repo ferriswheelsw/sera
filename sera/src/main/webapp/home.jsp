@@ -68,8 +68,8 @@ display: flex;
                     <%
                         }else{
                     %>
-                    <td>-<%=String.format("%.2f", topFive.get(i).getPriceChange()/100*(topFive.get(i).getMarketPrice()-(topFive.get(i).getPnl()/topFive.get(i).getHoldings())))%> <%=topFive.get(i).getStockCur()%></td>
-                    <td>-<%=String.format("%.2f", topFive.get(i).getPriceChange())%>%</td>
+                    <td><%=String.format("%.2f", topFive.get(i).getPriceChange()/100*(topFive.get(i).getMarketPrice()-(topFive.get(i).getPnl()/topFive.get(i).getHoldings())))%> <%=topFive.get(i).getStockCur()%></td>
+                    <td><%=String.format("%.2f", topFive.get(i).getPriceChange())%>%</td>
                     <td><img src="img/down.png" width="30"></td>
                     <%
                         }%>

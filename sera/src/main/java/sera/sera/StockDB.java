@@ -13,7 +13,7 @@ public class StockDB {
         Class.forName("com.mysql.jdbc.Driver");
         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/seraschema", "root", "Appletree1!");
 
-        // Insert new user
+        // Insert new stock
         PreparedStatement create = con.prepareStatement("insert into seraschema.stock values(?,?,?)");
         create.setString(1, stockCode);
         create.setString(2, market);

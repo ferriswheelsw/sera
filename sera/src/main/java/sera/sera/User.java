@@ -242,7 +242,7 @@ public class User {
 
         String insertQuery = "Insert into user_stock (uid, symbol, holding, emailStatus) values (?,?,?,?)";
         PreparedStatement pstmt = con.prepareStatement(insertQuery);
-        for(int count=2;count<input.size();count++){
+        for(int count=1;count<input.size();count++){
             List<String> i = input.get(count);
 //        }
 //        for (List<String> i : input){

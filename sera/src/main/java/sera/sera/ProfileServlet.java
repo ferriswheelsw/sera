@@ -70,32 +70,55 @@ public class ProfileServlet extends HttpServlet {
         if (request.getPart("file") == null) {
             System.out.println("no file");
         } else {
-            System.out.println("file");
-            // Fetch <input type="file" name="file">
-            Part filePart = request.getPart("file");
-            InputStream fileContent = filePart.getInputStream();
-            // call upload csv method to update database
-            try {
-                user.uploadCSV(fileContent);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+
+            String str = getFileName(request.getPart("file"));
+            System.out.println(str.substring(str.length()-3));
+            str=str.substring(str.length()-3);
+            if (str.equals("csv")){
+                System.out.println("successs");
+                // Fetch <input type="file" name="file">
+                Part filePart = request.getPart("file");
+                InputStream fileContent = filePart.getInputStream();
+                // call upload csv method to update database
+                try {
+                    user.uploadCSV(fileContent);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                // update user stocks in session with new stocks stored in database
+                try {
+                    user.updatestocks();
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                // fetch data from APIs again for updated stock list
+                JsonObject j = fetchCurrencyAPI(user, session);
+                fetchStockAPI(user, j);
+                // send success message back
+                request.setAttribute("message", "Portfolio update success!");
             }
-            // update user stocks in session with new stocks stored in database
-            try {
-                user.updatestocks();
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            else{
+                request.setAttribute("message", "Invalid file type, please try uploading again.");
             }
-            // fetch data from APIs again for updated stock list
-            JsonObject j = fetchCurrencyAPI(user, session);
-            fetchStockAPI(user, j);
-            // send success message back
-            request.setAttribute("message", "Portfolio update success!");
             request.getRequestDispatcher("/profile.jsp").forward(request, response);
         }
     }
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        System.out.println("content-disposition header= "+contentDisp);
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                System.out.println("hi");
+                System.out.println(token.substring(token.indexOf("=") + 2, token.length()-1));
+                return token.substring(token.indexOf("=") + 2, token.length()-1);
+            }
+        }
+        return "";
+    }
 }
+

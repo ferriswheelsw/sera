@@ -102,6 +102,8 @@ public class IncomeServlet extends HttpServlet {
                 total[i] += d.getDivPrice()*s.getHoldings();
             }
 
+
+
             // expected dividend this year - update arrays in similar fashion as above
             if(s.getPayDiv() != null && (s.getPayDiv().getYear()==Year.now().getValue())){
                 s.getPayDiv().setDivType("upcoming");
