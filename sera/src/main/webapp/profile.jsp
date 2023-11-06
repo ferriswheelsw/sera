@@ -30,7 +30,7 @@
     width: 100%;">
         <%
             if (request.getAttribute("message")!=null){
-                if(request.getAttribute("message").toString()=="Portfolio update success!")
+                if(request.getAttribute("message").toString()!="Invalid file type, please try uploading again.")
                 {
         %>
         <%--    https://www.w3schools.com/howto/howto_js_alert.asp--%>

@@ -20,7 +20,7 @@
     <div class="navoverall">
         <h2 class="sera">SERA</h2>
         <div class = "nav">
-            <a href="home" class="bold">Home</a>
+            <a href="home" style="font-weight:bold">Home</a>
             <a href="portfolio">Portfolio</a>
             <a href="income" >Income</a>
             <a href="profile">Profile</a>
@@ -49,8 +49,8 @@ display: flex;
         </div>
 
         <div style="position: absolute; top: 50%; left: 65%; transform: translate(-50%, -50%);">
-            <h3>welcome, <%=((User)request.getSession().getAttribute("user")).getFirstName()%>.</h3>
-            <p>You top stocks today: </p>
+            <h3>Welcome, <%=((User)request.getSession().getAttribute("user")).getFirstName()%>.</h3>
+            <p>Your top stocks today: </p>
             <table id="hometable">
                 <%ArrayList<Stock> topFive = (ArrayList<Stock>) request.getAttribute("topfive");
                 for (int i=0; i<topFive.size();i++){

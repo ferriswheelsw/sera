@@ -157,10 +157,4 @@ public class UserDB {
 
 
 
-    public static void main(String[] args) throws SQLException, NoSuchAlgorithmException, InvalidKeySpecException, ClassNotFoundException {
-//        delete(1);
-//        insert(2,"S", "W", "sonja.hinting@gmail.com", "abc", "HKD");
-//        update(1,"I", "R", "ishkitty5@gmail.com", "abc", "HKD");
-//        login("ishkitty5@gmail.com", "abc");
-    }
 }

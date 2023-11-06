@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -119,8 +120,8 @@ public class IncomeServlet extends HttpServlet {
                 int upcomingMonth = s.getLastDiv().getMonth() + s.getGap();
                 // if the previous dividend was released this year
                 if(s.getLastDiv().getYear()==Year.now().getValue()){
-                    // loop until goes past december of current year
-                    while (upcomingMonth<=11){
+                    // loop until goes past december of current year, making sure is in the future
+                    while (upcomingMonth<=11 && (upcomingMonth > Calendar.getInstance().get(Calendar.MONTH))){
                         s.getLastDiv().setDivType("estimated");
                         divTable[i][upcomingMonth] = s.getLastDiv();
                         total[i] += s.getLastDiv().getDivPrice()*s.getHoldings();

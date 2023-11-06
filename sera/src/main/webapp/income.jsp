@@ -23,7 +23,7 @@
     <div class = "nav">
         <a href="home">Home</a>
         <a href="portfolio">Portfolio</a>
-        <a href="income" class="bold">Income</a>
+        <a href="income" style="font-weight:bold">Income</a>
         <a href="profile">Profile</a>
     </div>
     <a href="login.jsp" class="logout">LOGOUT</a>

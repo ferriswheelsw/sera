@@ -159,6 +159,8 @@ public class LoginServlet extends HttpServlet {
                 Calendar date = dividendList.get(dividendList.size()-1).getDate();
                 Calendar payDate = stock.getDividend().getPayDate();
 
+
+
                 // store info on the last confirmed dividend paydate as an attribute of stock (in session)
                 s.setLastDiv(new Dividend(date.get(Calendar.MONTH), date.get(Calendar.YEAR), date.get(Calendar.DATE), s.getStockCode(), divprice));
 
@@ -353,7 +355,7 @@ public class LoginServlet extends HttpServlet {
                     }
                 }
 
-                System.out.println(s.getStockCode());
+                System.out.println("found stock " + s.getStockCode());
 
                 if (s.getPayDiv() != null) {
                     System.out.println(rs1.getString("emailStatus"));

@@ -282,11 +282,6 @@ public class User {
 
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
-        File initialFile = new File("C:/Users/sonja/Downloads/stock portfolio template - Sheet1.csv");
-        InputStream targetStream = new FileInputStream(initialFile);
-        User testing = new User(1, "S", "W", "a", null, "a");
-        testing.uploadCSV(targetStream);
-    }
+
 
 }
